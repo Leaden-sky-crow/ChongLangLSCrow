@@ -40,7 +40,6 @@ next-env.d.ts
 .agents/
 .trae/
 skills-lock.json
-config.json
 
 # 开发文档（仅保留 README.md）
 NOTES.md
@@ -62,13 +61,3 @@ vercel-mcp-server/
 # 其他开发配置
 eslint.config.mjs
 postcss.config.mjs
-
-# 公共资源中的开发文件
-public/file.svg
-public/globe.svg
-public/next.svg
-public/vercel.svg
-public/window.svg
-
-# 组件配置文件
-components.json
