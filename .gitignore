@@ -1,4 +1,6 @@
-# 依赖和构建
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
 /node_modules
 /.pnp
 .pnp.*
@@ -7,57 +9,35 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
+# testing
 /coverage
-/build
+
+# next.js
 /.next/
 /out/
 
-# 系统文件
+# production
+/build
+
+# misc
 .DS_Store
 *.pem
 
-# 日志文件
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# 环境变量
+# env files (can opt-in for committing if needed)
 .env*
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
-# Vercel
+# vercel
 .vercel
 
-# TypeScript
+# typescript
 *.tsbuildinfo
 next-env.d.ts
 
-# AI 助手和开发工具
-.agents/
-.trae/
-skills-lock.json
-
-# 开发文档（仅保留 README.md）
-NOTES.md
-SUPABASE_SETUP.md
-DEPLOYMENT.md
-DEPLOYMENT_CHECKLIST.md
-VERCEL_DEPLOYMENT_GUIDE.md
-checklist.md
-spec.md
-tasks.md
-
-# 数据库迁移文件（生产环境不需要）
-supabase/migrations/
-schema.sql
-
-# 子模块和开发工具
-vercel-mcp-server/
-
-# 其他开发配置
-eslint.config.mjs
-postcss.config.mjs
+.vercel
