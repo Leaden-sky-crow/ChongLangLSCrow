@@ -1,66 +1,57 @@
-# Acceptance Checklist - ChongLangLSCrow
+# 检查清单
 
-## 1. Environment & Config
-- [ ] Project initialized with Next.js 14 and Tailwind CSS.
-- [ ] Supabase project connected and tables created.
-- [ ] Environment variables configured correctly.
-- [ ] Basic `config.json` created for quotes and static assets.
-- [ ] Favicon and background image placed in `/public`.
+## 管理后台站内通知功能
 
-## 2. Authentication
-- [ ] User can register with valid email (format check).
-- [ ] User receives confirmation email (mock or real).
-- [ ] User can login with email/password.
-- [ ] User can logout.
-- [ ] Password reset flow works.
-- [ ] Unauthorized users redirected from protected routes.
+### 后端检查项
+- [ ] `searchUsersForNotifications` server action 能正确搜索用户（按用户名、邮箱）
+- [ ] `sendSystemNotifications` server action 支持单个用户、多个用户、全体用户发送
+- [ ] 通知内容长度验证（标题≤50字符，内容≤500字符）
+- [ ] RLS 策略正确限制只有管理员可以发送通知
+- [ ] 发送成功后正确返回结果
+- [ ] 发送失败时返回具体错误信息
 
-## 3. Home Page
-- [ ] Title animation (fade out on scroll) works.
-- [ ] Quote carousel cycles through config entries.
-- [ ] Day/Night mode toggle persists and applies globally.
-- [ ] Navigation buttons filter posts correctly.
-- [ ] "About Me" renders Markdown correctly.
-- [ ] Post cards display all required info (title, author, date, summary, likes, comments).
-- [ ] Post card hover effect shows text preview.
+### 前端检查项
+- [ ] 用户搜索功能正常工作，显示正确的用户列表
+- [ ] 多选用户功能正常，支持选择/取消选择
+- [ ] 表单验证正确（必填字段、长度限制）
+- [ ] 发送按钮在 loading 状态时禁用
+- [ ] 发送成功后表单自动清空
+- [ ] toast 提示信息准确（成功/失败）
+- [ ] 组件响应式设计在移动端正常显示
 
-## 4. Post Detail
-- [ ] Post page loads via dynamic route `/posts/[id]`.
-- [ ] Cover image and blurred title background render correctly.
-- [ ] Markdown content renders properly (headers, lists, code blocks).
-- [ ] Series navigation buttons (Previous/Next) work correctly.
-- [ ] Comments section loads and allows posting (for logged-in users).
-- [ ] Like button toggles state and updates count.
-- [ ] Share button copies link or opens share dialog.
+### 集成检查项
+- [ ] 管理后台通知 tab 显示完整的通知管理界面
+- [ ] 组件加载性能良好，无明显延迟
+- [ ] 与其他管理功能无冲突
+- [ ] 页面刷新后状态保持正常
 
-## 5. User Center
-- [ ] Profile information displays correctly.
-- [ ] Avatar loads from external URL.
-- [ ] "My Posts" tab shows correct status (Published/Pending/Rejected).
-- [ ] "My Likes" links to correct posts.
-- [ ] "My Comments" links to correct comments.
-- [ ] Profile edit form validates and saves changes.
+## 主页分类切换自动滚动功能
 
-## 6. Creation Page
-- [ ] Editor loads with preview pane.
-- [ ] Auto-save mechanism works (check localStorage or draft status).
-- [ ] Image insertion via URL works.
-- [ ] Series management modal allows creating/selecting series.
-- [ ] "Publish" button changes status to "Pending".
-- [ ] "Save Draft" button saves without submitting.
+### 功能检查项
+- [ ] 在主页 (`/`) 点击分类按钮后自动滚动到 `#content` 区域
+- [ ] 滚动效果平滑，持续时间约300-500ms
+- [ ] 在 `/posts` 页面点击分类按钮时不触发自动滚动
+- [ ] 滚动目标位置正确（CategoryFilter 所在区域）
+- [ ] 防抖机制有效，避免重复滚动
 
-## 7. Admin Dashboard
-- [ ] Only accessible by users with `role: admin`.
-- [ ] "Pending" posts list is accurate.
-- [ ] "Approve" action changes status to "Published".
-- [ ] "Reject" action requires reason and changes status to "Rejected".
-- [ ] Rejected reason is visible to author.
-- [ ] "Delete" action removes post (soft or hard delete).
-- [ ] "Pin" and "Feature" actions update post flags.
+### 兼容性检查项
+- [ ] 桌面端浏览器（Chrome, Firefox, Edge）正常工作
+- [ ] 移动端浏览器（iOS Safari, Android Chrome）正常工作
+- [ ] 不同屏幕尺寸下滚动目标位置正确
+- [ ] 页面加载过程中点击分类按钮仍能正常滚动
 
-## 8. General & Non-Functional
-- [ ] Search returns relevant results.
-- [ ] Mobile view is usable and responsive.
-- [ ] Dark mode colors are consistent and legible.
-- [ ] 404 page appears for non-existent routes/posts.
-- [ ] Toast notifications appear for success/error actions.
+### 用户体验检查项
+- [ ] 滚动过程不影响页面其他交互
+- [ ] 滚动完成后页面内容完整显示
+- [ ] 返回顶部按钮或其他导航功能不受影响
+- [ ] URL 参数正确更新，支持浏览器前进/后退
+
+## 文档检查项
+
+### NOTES.md 更新
+- [ ] 站内通知功能实现细节完整记录
+- [ ] 自动滚动功能实现细节完整记录
+- [ ] 代码示例准确且可运行
+- [ ] 使用指南清晰易懂
+- [ ] 待办事项列表更新
+- [ ] 技术栈总结保持最新

@@ -1,73 +1,41 @@
-# Implementation Plan - ChongLangLSCrow
+# 任务列表
 
-## Phase 1: Infrastructure & Setup
-- [ ] Initialize Next.js 14 project with Tailwind CSS and TypeScript.
-- [ ] Configure `shadcn/ui` and install base components.
-- [ ] Set up Supabase project (Database, Auth, Storage).
-- [ ] Create database schema (Users, Posts, Comments, Likes, Series).
-- [ ] Configure RLS policies for security.
-- [ ] Set up environment variables (.env.local).
-- [ ] Create global layout (Header, Footer, Theme Provider).
+## 管理后台站内通知功能
 
-## Phase 2: Core Features
-- [ ] **Authentication**
-    - [ ] Login page (Email/Password).
-    - [ ] Register page (Email verification).
-    - [ ] Password reset flow.
-    - [ ] Protected route wrapper.
-- [ ] **Home Page**
-    - [ ] Hero section with background image and title animation.
-    - [ ] Quote carousel (from `config.json`).
-    - [ ] Navigation buttons (Category filter).
-    - [ ] Post list component (Card view, Pagination).
-    - [ ] "About Me" section (Markdown rendering).
-- [ ] **Post Detail**
-    - [ ] Dynamic routing `/posts/[id]`.
-    - [ ] Header with cover image, title, author info.
-    - [ ] Markdown content renderer.
-    - [ ] Series navigation (Previous/Next).
-    - [ ] Comments section.
-    - [ ] Like button and count.
+### 1. 后端开发
+- [ ] 创建 `searchUsersForNotifications` server action - 支持按用户名、邮箱搜索用户
+- [ ] 扩展 `createNotification` server action - 支持批量发送给多个用户
+- [ ] 创建 `sendSystemNotifications` server action - 封装完整的系统通知发送逻辑
 
-## Phase 3: User Interaction
-- [ ] **User Center**
-    - [ ] Profile page (Avatar, Bio, Contact).
-    - [ ] "My Posts" tab (Published, Pending, Rejected).
-    - [ ] "My Likes" tab.
-    - [ ] "My Comments" tab.
-    - [ ] Edit profile functionality.
-- [ ] **Creation Page**
-    - [ ] Markdown editor with preview.
-    - [ ] Image upload via URL (External).
-    - [ ] Draft saving (Auto-save to localStorage/DB).
-    - [ ] Publishing flow (Submit for review).
-    - [ ] Series management modal.
+### 2. 前端组件开发
+- [ ] 创建 `components/admin/notifications-management.tsx` 组件
+- [ ] 实现用户搜索和选择功能（支持多选）
+- [ ] 实现通知表单（标题、内容、链接URL）
+- [ ] 添加表单验证和提交逻辑
+- [ ] 集成 toast 通知反馈
 
-## Phase 4: Admin & Advanced Features
-- [ ] **Admin Dashboard**
-    - [ ] Role-based access control (Admin only).
-    - [ ] Post review interface (Approve/Reject).
-    - [ ] Post management (Pin, Feature, Delete).
-    - [ ] User management (Ban/Unban).
-    - [ ] Statistics dashboard.
-- [ ] **Search & Category**
-    - [ ] Search functionality (Title, Content, Author).
-    - [ ] Category pages.
-    - [ ] Tag cloud (optional).
-- [ ] **Notifications**
-    - [ ] In-app inbox (Review results, System messages).
-    - [ ] Toast notifications for actions.
+### 3. 管理后台集成
+- [ ] 在 `app/admin/page.tsx` 中导入并使用 `NotificationsManagement` 组件
+- [ ] 替换现有的 "通知 (WIP)" 占位内容
+- [ ] 测试完整的通知发送流程
 
-## Phase 5: Polish & Deploy
-- [ ] **UI/UX Refinement**
-    - [ ] Dark mode consistency check.
-    - [ ] Mobile responsiveness check.
-    - [ ] Loading states and skeletons.
-    - [ ] Error handling (404, 500 pages).
-- [ ] **Testing**
-    - [ ] Unit tests for utilities.
-    - [ ] Integration tests for critical flows.
-- [ ] **Deployment**
-    - [ ] Deploy to Vercel.
-    - [ ] Verify production build.
-    - [ ] SEO optimization (Metadata, Sitemap).
+## 主页分类切换自动滚动功能
+
+### 4. 自动滚动实现
+- [ ] 修改 `components/category-filter.tsx` 组件
+- [ ] 添加平滑滚动到 `#content` 容器的逻辑
+- [ ] 实现防抖机制避免重复滚动
+- [ ] 确保只在主页 (`/`) 触发，不影响 `/posts` 页面
+
+### 5. 用户体验优化
+- [ ] 调整滚动延迟时间（300ms）
+- [ ] 测试移动端和桌面端兼容性
+- [ ] 验证滚动后页面状态正常
+
+## 文档更新
+
+### 6. NOTES.md 更新
+- [ ] 记录站内通知功能的实现细节
+- [ ] 记录自动滚动功能的实现细节
+- [ ] 更新技术栈总结和待办事项
+- [ ] 添加使用指南和注意事项
