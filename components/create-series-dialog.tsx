@@ -28,7 +28,10 @@ export function CreateSeriesDialog() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!name) return
+    if (!name || name.trim().length === 0) {
+      toast.error('创建失败', { description: '系列名称不能为空' })
+      return
+    }
 
     setLoading(true)
     const formData = new FormData()
@@ -39,7 +42,7 @@ export function CreateSeriesDialog() {
     if (result?.error) {
       toast.error('创建失败', { description: result.error })
     } else {
-      toast.success('系列已创建')
+      toast.success('系列创建成功')
       setOpen(false)
       setName('')
       setDescription('')

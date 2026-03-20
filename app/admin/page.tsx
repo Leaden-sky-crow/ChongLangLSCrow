@@ -51,7 +51,7 @@ export default async function AdminPage() {
   }
 
   // Parallel data fetching - avoid waterfalls
-  const [postsResult, users] = await Promise.all([
+  const [postsResult, usersResult] = await Promise.all([
     supabase
       .from('posts')
       .select('*, author:profiles!author_id(nickname)')
@@ -60,6 +60,12 @@ export default async function AdminPage() {
   ])
 
   const posts = postsResult.data
+  const users = usersResult.users || []
+
+  // Handle errors from getUsers
+  if (usersResult.error) {
+    console.error('获取用户列表失败:', usersResult.error)
+  }
 
   // Calculate stats (cached, derived during render)
   const postStats = calculatePostStats(posts || [])

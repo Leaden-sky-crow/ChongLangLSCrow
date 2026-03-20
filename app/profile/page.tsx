@@ -12,6 +12,7 @@ import { Trash2 } from 'lucide-react'
 import { deleteSeries } from '@/app/series/actions'
 import { CommentsList } from '@/components/comments-list'
 import { getCommentsByUser } from '@/app/profile/actions'
+import Link from 'next/link'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
@@ -113,10 +114,8 @@ export default async function ProfilePage() {
                       post.status === 'draft' ? '草稿' : '审核中'}
                    </Badge>
                  </div>
-                 {/* Reusing PostCard but ideally should be a specialized one showing more details */}
-                 {/* Importing PostCard here would cause circular dependency if not careful, 
-                     so let's assume we can use the existing one for now or duplicate logic */}
-                  <div className="border rounded-lg p-4 h-full flex flex-col justify-between">
+                 <Link href={`/posts/${post.id}`} className="block">
+                   <div className="border rounded-lg p-4 pt-12 h-full flex flex-col justify-between">
                      <div>
                        <h3 className="font-bold text-lg mb-2">{post.title}</h3>
                        <p className="text-sm text-muted-foreground line-clamp-3">{post.summary}</p>
@@ -124,10 +123,11 @@ export default async function ProfilePage() {
                      <div className="mt-4 text-xs text-muted-foreground">
                        {new Date(post.created_at).toLocaleDateString()}
                        {post.status === 'rejected' && (
-                         <p className="text-red-500 mt-2">拒绝原因: {post.reject_reason}</p>
+                         <p className="text-red-500 mt-2">拒绝原因：{post.reject_reason}</p>
                        )}
                      </div>
-                  </div>
+                   </div>
+                 </Link>
                </div>
              ))}
            </div>
@@ -159,12 +159,13 @@ export default async function ProfilePage() {
         </TabsContent>
         <TabsContent value="likes" className="mt-6">
            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-             {/* We can reuse PostList logic here if we extract the rendering part */}
              {transformedLikedPosts.map((post: any) => (
-                <div key={post.id} className="border rounded-lg p-4">
-                  <h3 className="font-bold mb-2">{post.title}</h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2">{post.summary}</p>
-                </div>
+                <Link key={post.id} href={`/posts/${post.id}`} className="block">
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-bold mb-2">{post.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{post.summary}</p>
+                  </div>
+                </Link>
              ))}
            </div>
         </TabsContent>
