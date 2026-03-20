@@ -1,5 +1,5 @@
 import { PostList, type Post } from '@/components/post-list'
-import { CategoryFilter } from '@/components/category-filter'
+import { PostsCategoryFilter } from '@/components/posts-category-filter'
 import { getPosts } from '@/lib/posts'
 
 export default async function PostsPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
@@ -10,7 +10,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
   return (
     <div className="container py-20 min-h-screen">
       <h1 className="text-3xl font-bold mb-8">文章列表</h1>
-      <CategoryFilter />
+      <PostsCategoryFilter />
       <div className="mt-8">
         <PostList posts={posts} />
       </div>

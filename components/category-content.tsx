@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useTransition } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { CategoryFilter } from '@/components/category-filter'
 import { PostList, type Post } from '@/components/post-list'
 import { AboutSection } from '@/components/about-section'
@@ -12,14 +13,27 @@ interface CategoryContentProps {
 }
 
 export function CategoryContent({ initialCategory = 'all', aboutContent, initialPosts = [] }: CategoryContentProps) {
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory)
-  const [posts, setPosts] = useState<Post[]>(initialPosts)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
+
+  // Get current category from URL or fallback to initial
+  const selectedCategory = searchParams.get('category') || initialCategory
 
   const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategory(categoryId)
-    // Note: For now, we don't fetch new posts on category change
-    // This would require a server action or API call to implement
+    startTransition(() => {
+      const newParams = new URLSearchParams(searchParams.toString())
+      newParams.set('category', categoryId)
+      router.push(`?${newParams.toString()}`)
+    })
   }
+
+  // Filter posts on client side based on selected category
+  const filteredPosts = selectedCategory === 'about' 
+    ? [] 
+    : selectedCategory === 'all' || selectedCategory === undefined
+      ? initialPosts
+      : initialPosts.filter(post => post.category === selectedCategory)
 
   return (
     <div className="space-y-4">
@@ -28,10 +42,14 @@ export function CategoryContent({ initialCategory = 'all', aboutContent, initial
         onCategoryChange={handleCategoryChange}
       />
       <div className="mt-8">
-        {selectedCategory === 'about' ? (
+        {isPending ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : selectedCategory === 'about' ? (
           <AboutSection content={aboutContent || ''} />
         ) : (
-          <PostList posts={posts} />
+          <PostList posts={filteredPosts} />
         )}
       </div>
     </div>
