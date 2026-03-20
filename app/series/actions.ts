@@ -50,3 +50,46 @@ export async function deleteSeries(seriesId: string) {
   revalidatePath('/profile')
   return { success: true }
 }
+
+export async function updateSeries(
+  seriesId: string,
+  formData: FormData
+) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Unauthorized' }
+
+  const name = formData.get('name') as string
+  const description = formData.get('description') as string
+
+  // Validate input
+  if (!name || name.trim().length === 0) {
+    return { error: '系列名称不能为空' }
+  }
+  if (name.length > 50) {
+    return { error: '系列名称不能超过 50 个字符' }
+  }
+  if (description && description.length > 200) {
+    return { error: '系列简介不能超过 200 个字符' }
+  }
+
+  const { data, error } = await supabase
+    .from('series')
+    .update({
+      name,
+      description,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', seriesId)
+    .eq('author_id', user.id)
+    .select()
+
+  if (error) {
+    console.error('更新系列失败:', error)
+    return { error: error.message }
+  }
+
+  revalidatePath('/profile')
+  return { success: true, data }
+}

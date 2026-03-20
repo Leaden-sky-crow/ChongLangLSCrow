@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { createPost, getMySeries } from '@/app/create/actions'
+import { createSeries, deleteSeries, updateSeries } from '@/app/series/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -76,22 +77,38 @@ export default function CreatePage() {
       toast.error('系列名称不能为空')
       return
     }
-    // TODO: Implement createSeries server action
-    toast.success(`创建系列 "${newSeriesName}" 成功`)
-    setNewSeriesName('')
-    setSeriesDialogOpen(false)
-    // Refresh series list
-    const updated = await getMySeries()
-    setSeriesList(updated)
+
+    const formData = new FormData()
+    formData.append('name', newSeriesName)
+    formData.append('description', '')
+
+    const result = await createSeries(formData)
+    if (result?.error) {
+      toast.error('创建失败', { description: result.error })
+    } else {
+      toast.success('系列创建成功')
+      setNewSeriesName('')
+      setSeriesDialogOpen(false)
+      // Refresh series list
+      const updated = await getMySeries()
+      setSeriesList(updated)
+    }
   }
 
   const handleDeleteSeries = async (seriesId: string, seriesName: string) => {
     if (!confirm(`确定要删除系列 "${seriesName}" 吗？`)) return
-    // TODO: Implement deleteSeries server action
-    toast.success(`删除系列 "${seriesName}" 成功`)
-    setSeriesList(seriesList.filter(s => s.id !== seriesId))
-    if (formData.series_id === seriesId) {
-      setFormData({ ...formData, series_id: 'none' })
+
+    const result = await deleteSeries(seriesId)
+    if (result?.error) {
+      toast.error('删除失败', { description: result.error })
+    } else {
+      toast.success(`系列 "${seriesName}" 已删除`)
+      // Refresh series list
+      const updated = await getMySeries()
+      setSeriesList(updated)
+      if (formData.series_id === seriesId) {
+        setFormData({ ...formData, series_id: 'none' })
+      }
     }
   }
 
@@ -105,13 +122,27 @@ export default function CreatePage() {
       toast.error('系列名称不能为空')
       return
     }
-    // TODO: Implement updateSeries server action
-    toast.success(`更新系列成功`)
-    setSeriesList(seriesList.map(s => 
-      s.id === editingSeriesId ? { ...s, name: editingSeriesName } : s
-    ))
-    setEditingSeriesId(null)
-    setEditingSeriesName('')
+
+    const formData = new FormData()
+    formData.append('name', editingSeriesName)
+    formData.append('description', '')
+
+    if (!editingSeriesId) {
+      toast.error('系列 ID 无效')
+      return
+    }
+
+    const result = await updateSeries(editingSeriesId, formData)
+    if (result?.error) {
+      toast.error('更新失败', { description: result.error })
+    } else {
+      toast.success('系列更新成功')
+      setEditingSeriesId(null)
+      setEditingSeriesName('')
+      // Refresh series list
+      const updated = await getMySeries()
+      setSeriesList(updated)
+    }
   }
 
   // Auto-load draft from localStorage on mount
