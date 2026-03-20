@@ -124,9 +124,7 @@ export default async function ProfilePage() {
                      <Button
                        variant="outline"
                        size="sm"
-                       disabled={post.status === 'published' || post.status === 'pending'}
                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                       onClick={(e) => e.preventDefault()}
                      >
                        <Edit2 className="mr-2 h-4 w-4" />
                        编辑
