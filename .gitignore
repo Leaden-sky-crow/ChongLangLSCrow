@@ -47,3 +47,5 @@ next-env.d.ts
 
 
 .vercel
+about_me.md
+config.json
