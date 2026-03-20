@@ -52,7 +52,6 @@ export default function CreatePage() {
   const [formData, setFormData] = useState({
     title: '',
     summary: '',
-    cover_url: '',
     category: 'novel' as string,
     series_id: 'none' as string,
   })
@@ -145,7 +144,6 @@ export default function CreatePage() {
     const data = new FormData()
     data.append('title', formData.title)
     data.append('summary', formData.summary)
-    data.append('cover_url', formData.cover_url)
     data.append('category', formData.category)
     data.append('series_id', formData.series_id)
     data.append('content', content)
@@ -315,21 +313,6 @@ export default function CreatePage() {
                 ))}
               </SelectContent>
             </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="cover">封面图 URL</Label>
-            <div className="space-y-1">
-              <Input
-                id="cover"
-                value={formData.cover_url}
-                onChange={(e) => setFormData({ ...formData, cover_url: e.target.value })}
-                placeholder="https://..."
-              />
-              <p className="text-xs text-muted-foreground font-medium text-orange-500">
-                推荐使用 <a href="https://s.ee/" target="_blank" rel="noopener noreferrer" className="underline hover:text-orange-600">s.ee</a> 图床上传图片并获取链接
-              </p>
-            </div>
           </div>
         </div>
 

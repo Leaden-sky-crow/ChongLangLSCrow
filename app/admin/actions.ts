@@ -255,47 +255,116 @@ export async function batchUpdatePostStatus(postIds: string[], status: string) {
 
 export async function toggleUserBan(userId: string, isBanned: boolean) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // Verify admin role
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user?.id).single()
-  if (profile?.role !== 'admin') return { error: 'Unauthorized' }
-
-  const { error } = await supabase
-    .from('profiles')
-    .update({ is_banned: isBanned })
-    .eq('id', userId)
-
-  if (error) return { error: error.message }
   
-  if (isBanned) {
-    await createNotification(userId, '账号封禁', '您的账号已被管理员封禁。', 'system')
-  } else {
-    await createNotification(userId, '账号解封', '您的账号已解除封禁。', 'system')
-  }
+  try {
+    const { data: { user }, error: getUserError } = await supabase.auth.getUser()
+    
+    if (getUserError || !user) {
+      console.error('获取用户失败:', getUserError)
+      return { error: '未授权' }
+    }
 
-  revalidatePath('/admin')
-  return { success: true }
+    // Verify admin role
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    
+    if (profileError) {
+      console.error('获取管理员资料失败:', profileError)
+      return { error: '获取管理员信息失败' }
+    }
+    
+    if (profile?.role !== 'admin') {
+      console.error('用户不是管理员:', user.id)
+      return { error: '未授权' }
+    }
+
+    console.log('管理员封禁操作:', { 
+      adminId: user.id, 
+      targetUserId: userId, 
+      isBanned,
+      timestamp: new Date().toISOString() 
+    })
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ is_banned: isBanned })
+      .eq('id', userId)
+
+    if (updateError) {
+      console.error('更新用户状态失败:', updateError)
+      return { error: `更新失败：${updateError.message}` }
+    }
+    
+    if (isBanned) {
+      await createNotification(userId, '账号封禁', '您的账号已被管理员封禁。', 'system')
+    } else {
+      await createNotification(userId, '账号解封', '您的账号已解除封禁。', 'system')
+    }
+
+    revalidatePath('/admin')
+    return { success: true }
+  } catch (error) {
+    console.error('封禁操作异常:', error)
+    return { error: `操作失败：${error instanceof Error ? error.message : '未知错误'}` }
+  }
 }
 
 export async function toggleUserRole(userId: string, isAdmin: boolean) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // Verify admin role
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user?.id).single()
-  if (profile?.role !== 'admin') return { error: 'Unauthorized' }
-
-  const role = isAdmin ? 'admin' : 'user'
-  const { error } = await supabase
-    .from('profiles')
-    .update({ role })
-    .eq('id', userId)
-
-  if (error) return { error: error.message }
   
-  await createNotification(userId, '权限变更', `您的账号权限已变更为：${role === 'admin' ? '管理员' : '普通用户'}。`, 'system')
+  try {
+    const { data: { user }, error: getUserError } = await supabase.auth.getUser()
+    
+    if (getUserError || !user) {
+      console.error('获取用户失败:', getUserError)
+      return { error: '未授权' }
+    }
 
-  revalidatePath('/admin')
-  return { success: true }
+    // Verify admin role
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    
+    if (profileError) {
+      console.error('获取管理员资料失败:', profileError)
+      return { error: '获取管理员信息失败' }
+    }
+    
+    if (profile?.role !== 'admin') {
+      console.error('用户不是管理员:', user.id)
+      return { error: '未授权' }
+    }
+
+    const role = isAdmin ? 'admin' : 'user'
+    
+    console.log('管理员提权操作:', { 
+      adminId: user.id, 
+      targetUserId: userId, 
+      newRole: role,
+      timestamp: new Date().toISOString() 
+    })
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ role })
+      .eq('id', userId)
+
+    if (updateError) {
+      console.error('更新用户角色失败:', updateError)
+      return { error: `更新失败：${updateError.message}` }
+    }
+    
+    await createNotification(userId, '权限变更', `您的账号权限已变更为：${role === 'admin' ? '管理员' : '普通用户'}。`, 'system')
+
+    revalidatePath('/admin')
+    return { success: true }
+  } catch (error) {
+    console.error('提权操作异常:', error)
+    return { error: `操作失败：${error instanceof Error ? error.message : '未知错误'}` }
+  }
 }

@@ -15,9 +15,8 @@ export async function createPost(formData: FormData) {
   const title = formData.get('title') as string
   const content = formData.get('content') as string
   const summary = formData.get('summary') as string
-  const cover_url = formData.get('cover_url') as string
   const category = formData.get('category') as string
-  const status = formData.get('status') as string // 'draft' or 'pending'
+  const status = formData.get('status') as string
   const series_id = formData.get('series_id') as string
 
   const postData: any = {
@@ -25,7 +24,6 @@ export async function createPost(formData: FormData) {
     title,
     content,
     summary,
-    cover_url,
     category,
     status,
     created_at: new Date().toISOString(),

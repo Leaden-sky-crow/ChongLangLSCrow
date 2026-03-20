@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Quote, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 
 interface HeroSectionProps {
   title: string
@@ -34,7 +34,6 @@ export function HeroSection({ title, quotes }: HeroSectionProps) {
 
       {/* Quote Carousel */}
       <div className="absolute left-8 top-24 z-10 max-w-md text-white/90 md:left-16 md:top-32">
-        <Quote className="mb-4 h-8 w-8 opacity-80 text-white" />
         <motion.div
           key={currentQuote}
           initial={{ opacity: 0, x: -20 }}
