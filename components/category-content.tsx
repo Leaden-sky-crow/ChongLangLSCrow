@@ -24,7 +24,8 @@ export function CategoryContent({ initialCategory = 'all', aboutContent, initial
     startTransition(() => {
       const newParams = new URLSearchParams(searchParams.toString())
       newParams.set('category', categoryId)
-      router.push(`?${newParams.toString()}`)
+      // 添加 { scroll: false } 禁用自动滚动到页面顶部
+      router.push(`?${newParams.toString()}`, { scroll: false })
     })
   }
 

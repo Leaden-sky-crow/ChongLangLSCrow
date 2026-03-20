@@ -5,14 +5,30 @@ import { createClient } from '@/utils/supabase/server'
 export async function getUsers() {
   try {
     const supabase = await createClient()
+    
+    if (!supabase) {
+      console.error('无法创建 Supabase 客户端')
+      return []
+    }
+    
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    if (authError || !user) {
-      console.error('获取用户失败:', authError)
+    if (authError) {
+      console.error('获取用户失败:', {
+        error: authError,
+        message: authError.message,
+        code: authError.code,
+        status: authError.status
+      })
+      return []
+    }
+    
+    if (!user) {
+      console.error('用户未登录或 token 已过期')
       return []
     }
 
-    // Verify admin role
+    // Verify admin role with detailed error handling
     const { data: adminProfile, error: adminCheckError } = await supabase
       .from('profiles')
       .select('role')
@@ -20,29 +36,42 @@ export async function getUsers() {
       .single()
     
     if (adminCheckError) {
-      console.error('检查管理员权限失败:', adminCheckError)
+      console.error('检查管理员权限失败:', {
+        error: adminCheckError,
+        message: adminCheckError.message,
+        code: adminCheckError.code,
+        details: adminCheckError.details,
+        hint: adminCheckError.hint
+      })
       return []
     }
 
     if (adminProfile?.role !== 'admin') {
-      console.log('用户不是管理员')
+      console.log('当前用户不是管理员，role:', adminProfile?.role)
       return []
     }
 
-    // Get all profiles with detailed logging
+    // Get all profiles with detailed error logging
     const { data: profiles, error: profilesError } = await supabase
       .from('profiles')
       .select('id, nickname, avatar_url, role, is_banned, created_at')
       .order('created_at', { ascending: false })
 
     if (profilesError) {
-      console.error('获取 profiles 失败:', profilesError)
+      console.error('获取 profiles 失败:', {
+        error: profilesError,
+        message: profilesError.message,
+        code: profilesError.code,
+        details: profilesError.details,
+        hint: profilesError.hint
+      })
       return []
     }
 
     console.log('获取到 profiles 数量:', profiles?.length || 0)
 
     if (!profiles || profiles.length === 0) {
+      console.log('profiles 表为空或不存在')
       return []
     }
 
@@ -107,7 +136,12 @@ export async function getUsers() {
     console.log('最终用户数据:', users.length)
     return users
   } catch (error) {
-    console.error('getUsers 函数执行失败:', error)
+    console.error('getUsers 函数执行失败:', {
+      error,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      cause: error instanceof Error ? error.cause : undefined
+    })
     return []
   }
 }
