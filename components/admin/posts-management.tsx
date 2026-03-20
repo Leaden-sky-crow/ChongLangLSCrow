@@ -16,6 +16,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -247,43 +248,45 @@ export function PostsManagement({ posts }: { posts: Post[] }) {
                       <MoreHorizontal className="h-4 w-4" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>操作</DropdownMenuLabel>
-                      <DropdownMenuItem>
-                        <Link href={`/posts/${post.id}`} target="_blank" className="flex items-center w-full">
-                          <Eye className="mr-2 h-4 w-4" />
-                          <span>查看详情</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      {post.status === 'pending' && (
-                        <>
+                      <DropdownMenuGroup>
+                        <DropdownMenuLabel>操作</DropdownMenuLabel>
+                        <DropdownMenuItem>
+                          <Link href={`/posts/${post.id}`} target="_blank" className="flex items-center w-full">
+                            <Eye className="mr-2 h-4 w-4" />
+                            <span>查看详情</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        {post.status === 'pending' && (
+                          <>
+                            <DropdownMenuItem onClick={() => handleStatusUpdate(post.id, 'published')}>
+                              <Check className="mr-2 h-4 w-4" />
+                              通过审核
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleStatusUpdate(post.id, 'rejected')}>
+                              <X className="mr-2 h-4 w-4" />
+                              拒绝投稿
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                        {post.status === 'published' && (
+                          <DropdownMenuItem onClick={() => handleStatusUpdate(post.id, 'hidden')}>
+                            <EyeOff className="mr-2 h-4 w-4" />
+                            隐藏文章
+                          </DropdownMenuItem>
+                        )}
+                        {post.status === 'hidden' && (
                           <DropdownMenuItem onClick={() => handleStatusUpdate(post.id, 'published')}>
-                            <Check className="mr-2 h-4 w-4" />
-                            通过审核
+                            <Eye className="mr-2 h-4 w-4" />
+                            恢复显示
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleStatusUpdate(post.id, 'rejected')}>
-                            <X className="mr-2 h-4 w-4" />
-                            拒绝投稿
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                      {post.status === 'published' && (
-                        <DropdownMenuItem onClick={() => handleStatusUpdate(post.id, 'hidden')}>
-                          <EyeOff className="mr-2 h-4 w-4" />
-                          隐藏文章
+                        )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => handleDelete(post.id)} className="text-red-600">
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          删除文章
                         </DropdownMenuItem>
-                      )}
-                      {post.status === 'hidden' && (
-                        <DropdownMenuItem onClick={() => handleStatusUpdate(post.id, 'published')}>
-                          <Eye className="mr-2 h-4 w-4" />
-                          恢复显示
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => handleDelete(post.id)} className="text-red-600">
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        删除文章
-                      </DropdownMenuItem>
+                      </DropdownMenuGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

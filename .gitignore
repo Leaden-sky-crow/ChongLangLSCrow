@@ -39,5 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/vercel-mcp-server/
+/.spec/
+/.trae/
+/.vercel/
+/.agents/
+
 
 .vercel
