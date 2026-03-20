@@ -52,13 +52,11 @@ export function EditProfileDialog({ profile }: { profile: Profile }) {
       qq: formData.qq,
     })
 
-    const data = new FormData()
-    data.append('nickname', formData.nickname)
-    data.append('avatar_url', formData.avatar_url)
-    data.append('bio', formData.bio)
-    data.append('contact_info', contact_info)
-
-    const result = await updateProfile(data)
+    const result = await updateProfile(profile.id, {
+      nickname: formData.nickname,
+      bio: formData.bio,
+      contact_info,
+    })
 
     if (result?.error) {
       toast.error('更新失败', { description: result.error })

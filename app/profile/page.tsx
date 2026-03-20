@@ -7,6 +7,9 @@ import { Badge } from '@/components/ui/badge'
 import { PostList } from '@/components/post-list'
 import { EditProfileDialog } from '@/components/edit-profile-dialog'
 import { CreateSeriesDialog } from '@/components/create-series-dialog'
+import { EditPostDialog } from '@/components/edit-post-dialog'
+import { DeletePostDialog } from '@/components/delete-post-dialog'
+import { DeleteSeriesDialog } from '@/components/delete-series-dialog'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
 import { deleteSeries } from '@/app/series/actions'
@@ -45,6 +48,9 @@ export default async function ProfilePage() {
     .select('*')
     .eq('author_id', user.id)
     .order('created_at', { ascending: false })
+
+  // Get series list for edit dialog
+  const seriesList = mySeries?.map(s => ({ id: s.id, name: s.name })) || []
 
   // Transform liked posts
   const transformedLikedPosts = likedPosts?.map((item: any) => ({
@@ -114,6 +120,10 @@ export default async function ProfilePage() {
                       post.status === 'draft' ? '草稿' : '审核中'}
                    </Badge>
                  </div>
+                 <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                   <EditPostDialog post={post} seriesList={seriesList} />
+                   <DeletePostDialog postId={post.id} postTitle={post.title} />
+                 </div>
                  <Link href={`/posts/${post.id}`} className="block">
                    <div className="border rounded-lg p-4 pt-12 h-full flex flex-col justify-between">
                      <div>
@@ -144,14 +154,7 @@ export default async function ProfilePage() {
                   <CardDescription>{series.description}</CardDescription>
                 </CardHeader>
                 <div className="absolute top-2 right-2">
-                  <form action={async () => {
-                    'use server'
-                    await deleteSeries(series.id)
-                  }}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </form>
+                  <DeleteSeriesDialog seriesId={series.id} seriesName={series.name} />
                 </div>
               </Card>
             ))}
