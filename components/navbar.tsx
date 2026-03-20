@@ -12,12 +12,14 @@ export async function Navbar() {
   const { data: { user } } = await supabase.auth.getUser()
 
   let isAdmin = false
+  let profile = null
   if (user) {
-    const { data: profile } = await supabase
+    const { data: userProfile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('nickname, avatar_url, role')
       .eq('id', user.id)
       .single()
+    profile = userProfile
     isAdmin = profile?.role === 'admin'
   }
 
@@ -78,7 +80,7 @@ export async function Navbar() {
           {user ? (
             <>
               <NotificationBell />
-              <UserNav user={user} />
+              <UserNav user={user} profile={profile} />
             </>
           ) : (
             <nav className="flex items-center space-x-2">

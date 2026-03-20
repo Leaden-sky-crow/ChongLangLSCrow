@@ -14,7 +14,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { createClient } from '@/utils/supabase/client'
 import { User, PenSquare, LogOut } from 'lucide-react'
 
-export function UserNav({ user }: { user: SupabaseUser }) {
+interface Profile {
+  nickname: string | null
+  avatar_url: string | null
+}
+
+export function UserNav({ user, profile }: { user: SupabaseUser; profile: Profile | null }) {
   const router = useRouter()
   const supabase = createClient()
 
@@ -23,8 +28,9 @@ export function UserNav({ user }: { user: SupabaseUser }) {
     router.refresh()
   }
 
-  const nickname = user.user_metadata.nickname || user.email?.split('@')[0] || '用户'
-  const avatarUrl = user.user_metadata.avatar_url
+  // Use profile data from profiles table, fallback to user_metadata
+  const nickname = profile?.nickname || user.user_metadata.nickname || user.email?.split('@')[0] || '用户'
+  const avatarUrl = profile?.avatar_url || user.user_metadata.avatar_url
 
   return (
     <DropdownMenu>
