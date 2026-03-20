@@ -4,6 +4,7 @@ import { PostHeader } from '@/components/post-header'
 import { PostContent } from '@/components/post-content'
 import { Comments } from '@/components/comments'
 import { LikeButton } from '@/components/like-button'
+import { ViewTracker } from '@/components/view-tracker'
 import { createClient } from '@/utils/supabase/server'
 import { Metadata } from 'next'
 
@@ -80,6 +81,9 @@ export default async function PostPage({ params }: Props) {
   return (
     <article className="min-h-screen pb-20">
       <PostHeader post={post} />
+      
+      {/* View tracker - increments view count after 3 seconds */}
+      <ViewTracker postId={post.id} />
       
       <div className="container max-w-3xl py-8">
         <PostContent content={post.content} />
