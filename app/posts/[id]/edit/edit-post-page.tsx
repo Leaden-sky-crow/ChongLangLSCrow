@@ -150,7 +150,7 @@ export default function EditPostPage({ postId }: EditPostPageProps) {
       category: formData.category,
       cover_url: undefined,
       series_id: formData.series_id === 'none' ? undefined : formData.series_id,
-      summary: formData.summary,
+      summary: formData.summary || undefined,
       content,
     })
 

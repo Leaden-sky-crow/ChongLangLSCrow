@@ -130,7 +130,7 @@ export async function updatePost(
     category: string
     cover_url?: string
     series_id?: string
-    summary: string
+    summary?: string
     content: string
   }
 ) {
@@ -151,10 +151,8 @@ export async function updatePost(
   if (!content || content.trim().length === 0) {
     return { error: '内容不能为空' }
   }
-  if (!summary || summary.trim().length === 0) {
-    return { error: '摘要不能为空' }
-  }
-  if (summary.length > 500) {
+  // 摘要为可选字段，只验证长度不超过限制
+  if (summary && summary.length > 500) {
     return { error: '摘要不能超过 500 个字符' }
   }
 
