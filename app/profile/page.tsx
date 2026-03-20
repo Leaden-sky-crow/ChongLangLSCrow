@@ -7,11 +7,10 @@ import { Badge } from '@/components/ui/badge'
 import { PostList } from '@/components/post-list'
 import { EditProfileDialog } from '@/components/edit-profile-dialog'
 import { CreateSeriesDialog } from '@/components/create-series-dialog'
-import { EditPostDialog } from '@/components/edit-post-dialog'
 import { DeletePostDialog } from '@/components/delete-post-dialog'
 import { DeleteSeriesDialog } from '@/components/delete-series-dialog'
 import { Button } from '@/components/ui/button'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Edit2 } from 'lucide-react'
 import { deleteSeries } from '@/app/series/actions'
 import { CommentsList } from '@/components/comments-list'
 import { getCommentsByUser } from '@/app/profile/actions'
@@ -121,7 +120,18 @@ export default async function ProfilePage() {
                    </Badge>
                  </div>
                  <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                   <EditPostDialog post={post} seriesList={seriesList} />
+                   <Link href={`/posts/${post.id}/edit`}>
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       disabled={post.status === 'published' || post.status === 'pending'}
+                       className="opacity-0 group-hover:opacity-100 transition-opacity"
+                       onClick={(e) => e.preventDefault()}
+                     >
+                       <Edit2 className="mr-2 h-4 w-4" />
+                       编辑
+                     </Button>
+                   </Link>
                    <DeletePostDialog postId={post.id} postTitle={post.title} />
                  </div>
                  <Link href={`/posts/${post.id}`} className="block">

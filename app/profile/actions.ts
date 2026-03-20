@@ -67,6 +67,27 @@ export async function getCommentsByUser(userId: string) {
   return { comments: transformedComments, error: null }
 }
 
+export async function getPostById(postId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Unauthorized', data: null }
+
+  const { data: post, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('id', postId)
+    .eq('author_id', user.id)
+    .single()
+
+  if (error) {
+    console.error('获取文章失败:', error)
+    return { error: error.message, data: null }
+  }
+
+  return { data: post, error: null }
+}
+
 export async function deleteComment(commentId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

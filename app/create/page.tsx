@@ -43,6 +43,8 @@ export default function CreatePage() {
   const router = useRouter()
   const { theme } = useTheme()
   const [loading, setLoading] = useState(false)
+  const [autoSaving, setAutoSaving] = useState(false)
+  const [lastSavedContent, setLastSavedContent] = useState('')
   const [content, setContent] = useState('**开始你的创作...**')
   const [seriesList, setSeriesList] = useState<{ id: string; name: string }[]>([])
   const [seriesDialogOpen, setSeriesDialogOpen] = useState(false)
@@ -112,7 +114,7 @@ export default function CreatePage() {
     setEditingSeriesName('')
   }
 
-  // Auto-save logic (simplified for now using localStorage)
+  // Auto-load draft from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem('draft_post')
     if (saved) {
@@ -120,6 +122,7 @@ export default function CreatePage() {
         const parsed = JSON.parse(saved)
         setFormData(parsed.formData)
         setContent(parsed.content)
+        setLastSavedContent(parsed.content)
         toast.info('已恢复上次未保存的草稿')
       } catch (e) {
         console.error('Failed to restore draft', e)
@@ -127,12 +130,49 @@ export default function CreatePage() {
     }
   }, [])
 
+  // Auto-save to localStorage (keep for backup)
   useEffect(() => {
     const timer = setTimeout(() => {
       localStorage.setItem('draft_post', JSON.stringify({ formData, content }))
     }, 1000)
     return () => clearTimeout(timer)
   }, [formData, content])
+
+  // Auto-save draft to server every 60 seconds
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const hasChanges = content !== lastSavedContent
+      const hasContent = formData.title || content
+      
+      if (hasChanges && hasContent && !autoSaving) {
+        setAutoSaving(true)
+        try {
+          const data = new FormData()
+          data.append('title', formData.title)
+          data.append('summary', formData.summary)
+          data.append('category', formData.category)
+          data.append('series_id', formData.series_id)
+          data.append('content', content)
+          data.append('status', 'draft')
+
+          const result = await createPost(data)
+          
+          if (result?.success) {
+            toast.success('草稿已自动保存')
+            setLastSavedContent(content)
+          } else {
+            console.error('自动保存失败:', result?.error)
+          }
+        } catch (error) {
+          console.error('自动保存异常:', error)
+        } finally {
+          setAutoSaving(false)
+        }
+      }
+    }, 60000) // 60 seconds
+
+    return () => clearInterval(interval)
+  }, [content, formData, lastSavedContent, autoSaving])
 
   const handleSubmit = async (status: 'draft' | 'pending') => {
     if (!formData.title || !content) {
@@ -165,11 +205,14 @@ export default function CreatePage() {
     <div className="container max-w-4xl py-8 min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">开始创作</h1>
-        <div className="flex gap-4">
-          <Button variant="outline" onClick={() => handleSubmit('draft')} disabled={loading}>
-            <Save className="mr-2 h-4 w-4" />
-            保存草稿
-          </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => handleSubmit('draft')} disabled={loading || autoSaving}>
+              {(loading || autoSaving) ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+              {autoSaving ? '保存中...' : '保存草稿'}
+            </Button>
+            <span className="text-xs text-muted-foreground">草稿保存在个人主页，您可以稍后继续编辑</span>
+          </div>
           <Button onClick={() => handleSubmit('pending')} disabled={loading}>
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
             发布投稿
