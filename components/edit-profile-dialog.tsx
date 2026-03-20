@@ -54,6 +54,7 @@ export function EditProfileDialog({ profile }: { profile: Profile }) {
 
     const result = await updateProfile(profile.id, {
       nickname: formData.nickname,
+      avatar_url: formData.avatar_url,
       bio: formData.bio,
       contact_info,
     })

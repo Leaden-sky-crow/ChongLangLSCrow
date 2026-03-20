@@ -7,6 +7,7 @@ export async function updateProfile(
   userId: string,
   data: {
     nickname: string
+    avatar_url?: string
     bio: string
     contact_info?: any
   }
