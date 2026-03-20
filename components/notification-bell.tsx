@@ -32,6 +32,12 @@ export function NotificationBell() {
   const [unreadCount, setUnreadCount] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
 
+  // Load notifications on component mount
+  useEffect(() => {
+    loadNotifications()
+  }, [])
+
+  // Refresh notifications when dropdown opens
   useEffect(() => {
     if (open) {
       loadNotifications()

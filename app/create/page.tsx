@@ -242,7 +242,10 @@ export default function CreatePage() {
               {(loading || autoSaving) ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               {autoSaving ? '保存中...' : '保存草稿'}
             </Button>
-            <span className="text-xs text-muted-foreground">需要有正文和题目才能保存，60 秒自动保存</span>
+            <div className="text-xs text-muted-foreground">
+              <p>草稿保存在个人主页，您可以稍后继续编辑</p>
+              <p>需要有正文和题目才能保存草稿，60 秒自动保存</p>
+            </div>
           </div>
           <Button onClick={() => handleSubmit('pending')} disabled={loading}>
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
