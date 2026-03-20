@@ -10,43 +10,64 @@ export async function getUsers() {
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user?.id).single()
   if (profile?.role !== 'admin') return []
 
-  // First get all profiles with post and comment counts
-  const { data: profilesData } = await supabase
+  // Get all profiles first (similar to searchUsersForNotifications)
+  const { data: profiles, error: profilesError } = await supabase
     .from('profiles')
-    .select(`
-      id,
-      nickname,
-      avatar_url,
-      role,
-      is_banned,
-      created_at,
-      contact_info,
-      posts:posts(count),
-      comments:comments(count)
-    `)
+    .select('id, nickname, avatar_url, role, is_banned, created_at')
     .order('created_at', { ascending: false })
 
-  if (!profilesData) return []
-
-  // Get emails from auth.users by mapping user IDs
-  const userIds = profilesData.map(p => p.id)
-  const { data: authData, error: authError } = await supabase.rpc('get_user_emails', {
-    user_ids: userIds
-  })
-
-  // Create a map of user IDs to emails
-  const emailMap = new Map()
-  if (!authError && authData) {
-    authData.forEach((item: any) => {
-      emailMap.set(item.user_id, item.user_email)
-    })
+  if (profilesError || !profiles) {
+    console.error('Error fetching profiles:', profilesError)
+    return []
   }
 
-  // Transform the data
-  return profilesData.map((u: any) => ({
-    ...u,
-    postCount: Array.isArray(u.posts) && u.posts.length > 0 ? u.posts[0].count : 0,
-    commentCount: Array.isArray(u.comments) && u.comments.length > 0 ? u.comments[0].count : 0,
-    email: emailMap.get(u.id) || u.contact_info?.email || 'N/A'
+  // Get emails from auth.users using the RPC function
+  const userIds = profiles.map(p => p.id)
+  const { data: authData, error: authError } = await supabase
+    .rpc('get_user_emails', { user_ids: userIds })
+
+  if (authError) {
+    console.error('Error fetching user emails:', authError)
+  }
+
+  // Get post counts for each user
+  const { data: postsData } = await supabase
+    .from('posts')
+    .select('author_id')
+    .in('author_id', userIds)
+
+  // Get comment counts for each user
+  const { data: commentsData } = await supabase
+    .from('comments')
+    .select('user_id')
+    .in('user_id', userIds)
+
+  // Count posts and comments per user
+  const postCountMap = new Map<string, number>()
+  const commentCountMap = new Map<string, number>()
+
+  postsData?.forEach(post => {
+    const currentCount = postCountMap.get(post.author_id) || 0
+    postCountMap.set(post.author_id, currentCount + 1)
+  })
+
+  commentsData?.forEach(comment => {
+    const currentCount = commentCountMap.get(comment.user_id) || 0
+    commentCountMap.set(comment.user_id, currentCount + 1)
+  })
+
+  // Combine profiles with auth data and counts
+  const users = profiles.map(p => ({
+    id: p.id,
+    nickname: p.nickname || '未知用户',
+    avatar_url: p.avatar_url,
+    role: p.role || 'user',
+    is_banned: p.is_banned || false,
+    created_at: p.created_at,
+    email: authData?.find((u: any) => u.user_id === p.id)?.user_email || 'N/A',
+    postCount: postCountMap.get(p.id) || 0,
+    commentCount: commentCountMap.get(p.id) || 0,
   }))
+
+  return users
 }
