@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { MessageCircle, Heart, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
+import { getCategoryName } from '@/lib/utils'
 
 export interface Post {
   id: string
@@ -54,7 +55,7 @@ export function PostCard({ post }: { post: Post }) {
         
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between mb-2">
-            <Badge variant="outline">{post.category}</Badge>
+            <Badge variant="outline">{getCategoryName(post.category)}</Badge>
             <div className="flex items-center text-xs text-muted-foreground">
               <Calendar className="mr-1 h-3 w-3" />
               {formattedDate}

@@ -43,6 +43,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { getCategoryName } from '@/lib/utils'
 
 interface Post {
   id: string
@@ -222,10 +223,7 @@ export function PostsManagement({ posts }: { posts: Post[] }) {
                 <TableCell>{post.author?.nickname || 'Unknown'}</TableCell>
                 <TableCell>
                   <Badge variant="outline">
-                    {post.category === 'novel' ? '小说' :
-                     post.category === 'essay' ? '散文' :
-                     post.category === 'poetry' ? '诗歌' :
-                     post.category || '未分类'}
+                    {getCategoryName(post.category)}
                   </Badge>
                 </TableCell>
                 <TableCell>

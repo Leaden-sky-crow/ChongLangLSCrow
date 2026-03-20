@@ -2,6 +2,7 @@ import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { getCategoryName } from '@/lib/utils'
 
 export function PostHeader({ post }: { post: any }) {
   return (
@@ -20,7 +21,7 @@ export function PostHeader({ post }: { post: any }) {
       <div className={`container max-w-3xl ${post.cover_url ? '-mt-24 relative z-10' : 'pt-20'}`}>
         <div className="space-y-4">
           <div className="flex items-center space-x-2">
-            <Badge>{post.category}</Badge>
+            <Badge>{getCategoryName(post.category)}</Badge>
             {post.series && <Badge variant="outline">{post.series.name}</Badge>}
           </div>
           
