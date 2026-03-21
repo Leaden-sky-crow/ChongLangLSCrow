@@ -163,6 +163,7 @@ export const searchSeries = cache(async (queryStr: string) => {
         .from('posts')
         .select('id, title, created_at, likes_count, comments_count')
         .eq('series_id', series.id)
+        .eq('status', 'published')
         .order('created_at', { ascending: false })
         .limit(3)
 
@@ -170,6 +171,7 @@ export const searchSeries = cache(async (queryStr: string) => {
         .from('posts')
         .select('likes_count, comments_count')
         .eq('series_id', series.id)
+        .eq('status', 'published')
 
       const total_likes = statsData?.reduce((sum, post) => sum + (post.likes_count || 0), 0) || 0
       const total_comments = statsData?.reduce((sum, post) => sum + (post.comments_count || 0), 0) || 0
@@ -183,5 +185,7 @@ export const searchSeries = cache(async (queryStr: string) => {
     })
   )
 
-  return seriesWithStats
+  return seriesWithStats.filter(series => 
+    series.latest_posts && series.latest_posts.length > 0
+  )
 })

@@ -119,6 +119,7 @@ export async function getAllSeries() {
         .from('posts')
         .select('id, title, created_at, likes_count, comments_count')
         .eq('series_id', series.id)
+        .eq('status', 'published')
         .order('created_at', { ascending: false })
         .limit(3)
 
@@ -126,6 +127,7 @@ export async function getAllSeries() {
         .from('posts')
         .select('likes_count, comments_count')
         .eq('series_id', series.id)
+        .eq('status', 'published')
 
       const total_likes = statsData?.reduce((sum, post) => sum + (post.likes_count || 0), 0) || 0
       const total_comments = statsData?.reduce((sum, post) => sum + (post.comments_count || 0), 0) || 0
@@ -139,7 +141,9 @@ export async function getAllSeries() {
     })
   )
 
-  return seriesWithStats
+  return seriesWithStats.filter(series => 
+    series.latest_posts && series.latest_posts.length > 0
+  )
 }
 
 export async function getSeriesById(seriesId: string) {
@@ -165,13 +169,25 @@ export async function getSeriesById(seriesId: string) {
   const { data: postsData } = await supabase
     .from('posts')
     .select(`
-      *,
-      author:profiles(
-        nickname,
-        avatar_url
-      )
+      id,
+      title,
+      summary,
+      cover_url,
+      category,
+      created_at,
+      view_count,
+      status,
+      is_pinned,
+      is_featured,
+      author_id,
+      series_id,
+      author:profiles!author_id(nickname, avatar_url),
+      series:series_id(*),
+      likes_count,
+      comments_count
     `)
     .eq('series_id', seriesId)
+    .eq('status', 'published')
     .order('created_at', { ascending: false })
 
   const total_likes = postsData?.reduce((sum, post) => sum + (post.likes_count || 0), 0) || 0
@@ -179,7 +195,11 @@ export async function getSeriesById(seriesId: string) {
 
   return {
     ...seriesData,
-    posts: postsData || [],
+    posts: postsData?.map(post => ({
+      ...post,
+      author: Array.isArray(post.author) ? post.author[0] : post.author,
+      series: Array.isArray(post.series) ? post.series[0] : post.series,
+    })) || [],
     total_likes,
     total_comments,
   }
