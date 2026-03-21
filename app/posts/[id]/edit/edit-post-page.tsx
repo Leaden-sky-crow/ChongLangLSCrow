@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { updatePost, getPostById } from '@/app/profile/actions'
+import { createBrowserClient } from '@supabase/ssr'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -56,6 +57,7 @@ export default function EditPostPage({ postId }: EditPostPageProps) {
     series_id: 'none',
   })
   const [originalPost, setOriginalPost] = useState<any>(null)
+  const [seriesList, setSeriesList] = useState<{ id: string; name: string }[]>([])
 
   // Category label mapping
   const categoryLabels: Record<string, string> = {
@@ -64,7 +66,7 @@ export default function EditPostPage({ postId }: EditPostPageProps) {
     poetry: '诗歌',
   }
 
-  // Load post data
+  // Load post data and series list
   useEffect(() => {
     const loadPost = async () => {
       const result = await getPostById(postId)
@@ -85,6 +87,25 @@ export default function EditPostPage({ postId }: EditPostPageProps) {
         })
         setContent(post.content)
         setLastSavedContent(post.content)
+      }
+      
+      // Load series list
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+      
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: series } = await supabase
+          .from('series')
+          .select('id, name')
+          .eq('author_id', user.id)
+          .order('created_at', { ascending: false })
+        
+        if (series) {
+          setSeriesList(series)
+        }
       }
     }
     
@@ -214,12 +235,12 @@ export default function EditPostPage({ postId }: EditPostPageProps) {
             <Label htmlFor="category">文章分类</Label>
             <Select value={formData.category} onValueChange={(value) => value && setFormData({ ...formData, category: value })}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="选择分类" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="novel">小说</SelectItem>
-                <SelectItem value="essay">散文</SelectItem>
-                <SelectItem value="poetry">诗歌</SelectItem>
+                {Object.entries(categoryLabels).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>{label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -228,11 +249,19 @@ export default function EditPostPage({ postId }: EditPostPageProps) {
             <Label htmlFor="series">系列（可选）</Label>
             <Select value={formData.series_id} onValueChange={(value) => value && setFormData({ ...formData, series_id: value })}>
               <SelectTrigger>
-                <SelectValue placeholder="选择系列" />
+                <SelectValue placeholder={
+                  formData.series_id === 'none' 
+                    ? '无系列'
+                    : seriesList.find(s => s.id === formData.series_id)?.name || '选择系列'
+                } />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">无系列</SelectItem>
-                {/* TODO: Add series list if needed */}
+                {seriesList.map((series) => (
+                  <SelectItem key={series.id} value={series.id}>
+                    {series.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

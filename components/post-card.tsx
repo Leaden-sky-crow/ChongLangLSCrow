@@ -25,6 +25,10 @@ export interface Post {
   }
   likes_count: number
   comments_count: number
+  series?: {
+    id: string
+    name: string
+  } | null
 }
 
 export function PostCard({ post }: { post: Post }) {
@@ -54,17 +58,22 @@ export function PostCard({ post }: { post: Post }) {
         )}
         
         <CardHeader className="pb-2">
-          <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
             <Badge variant="outline">{getCategoryName(post.category)}</Badge>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <Calendar className="mr-1 h-3 w-3" />
-              {formattedDate}
-            </div>
+            {post.series && (
+              <Badge variant="secondary">{post.series.name}</Badge>
+            )}
           </div>
-          <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">
-            {post.title}
-          </h3>
-        </CardHeader>
+          <div className="flex items-center text-xs text-muted-foreground">
+            <Calendar className="mr-1 h-3 w-3" />
+            {formattedDate}
+          </div>
+        </div>
+        <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">
+          {post.title}
+        </h3>
+      </CardHeader>
         
         <CardContent className="pb-4">
           <p className="line-clamp-3 text-sm text-muted-foreground">
