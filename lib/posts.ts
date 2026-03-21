@@ -60,7 +60,20 @@ export const getPost = cache(async (id: string) => {
   const { data, error } = await supabase
     .from('posts')
     .select(`
-      *,
+      id,
+      title,
+      summary,
+      content,
+      cover_url,
+      category,
+      created_at,
+      updated_at,
+      view_count,
+      status,
+      is_pinned,
+      is_featured,
+      author_id,
+      series_id,
       author:profiles!author_id(nickname, avatar_url),
       likes(count),
       comments(count),
