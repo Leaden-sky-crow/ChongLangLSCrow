@@ -1,6 +1,11 @@
 import { PostList, type Post } from '@/components/post-list'
 import { PostsCategoryFilter } from '@/components/posts-category-filter'
 import { getPosts } from '@/lib/posts'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: '文章列表',
+}
 
 export default async function PostsPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const { category } = await searchParams

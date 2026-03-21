@@ -11,6 +11,11 @@ import { Github } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { cache } from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: '管理后台',
+}
 
 // Cache admin check for this request
 const checkAdminRole = cache(async (userId: string) => {

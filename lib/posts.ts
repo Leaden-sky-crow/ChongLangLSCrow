@@ -19,6 +19,7 @@ export const getPosts = cache(async (category?: string, page: number = 1, limit:
       is_pinned,
       is_featured,
       author:profiles!author_id(nickname, avatar_url),
+      series:series_id(*),
       likes(count),
       comments(count)
     `, { count: 'exact' })
@@ -47,6 +48,7 @@ export const getPosts = cache(async (category?: string, page: number = 1, limit:
   const posts = data.map(post => ({
     ...post,
     author: Array.isArray(post.author) ? post.author[0] : post.author,
+    series: Array.isArray(post.series) ? post.series[0] : post.series,
     likes_count: post.likes?.[0]?.count || 0,
     comments_count: post.comments?.[0]?.count || 0,
   }))

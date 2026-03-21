@@ -1,4 +1,17 @@
 import EditPostPage from './edit-post-page'
+import { getPost } from '@/lib/posts'
+import { Metadata } from 'next'
+
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const post = await getPost((await params).id)
+  return {
+    title: `编辑文章 - ${post?.title || '文章详情'}`,
+  }
+}
 
 export default async function PostEditPage({ 
   params 

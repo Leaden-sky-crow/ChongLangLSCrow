@@ -1,5 +1,10 @@
 import { searchPosts } from '@/lib/posts'
 import { PostCard, type Post } from '@/components/post-card'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: '搜索',
+}
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q } = await searchParams

@@ -19,7 +19,7 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentQuote((prev) => (prev + 1) % quotes.length)
-    }, 5000)
+    }, 10000)  // 10 秒轮播
     return () => clearInterval(interval)
   }, [quotes.length])
 
@@ -34,17 +34,21 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
       </div>
 
       {/* Quote Carousel */}
-      <div className="absolute left-8 top-24 z-10 max-w-md text-white/90 md:left-16 md:top-32">
+      <div className="absolute left-4 top-16 z-10 max-w-md text-white/90 md:left-16 md:top-32">
         <motion.div
           key={currentQuote}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 20 }}
           transition={{ duration: 0.8 }}
-          className="bg-black/20 p-6 rounded-lg backdrop-blur-sm border border-white/10"
+          className="bg-black/20 p-4 rounded-lg backdrop-blur-sm border border-white/10 md:p-6"
         >
-          <p className="text-xl font-light italic leading-relaxed">"{quotes[currentQuote].content}"</p>
-          <p className="mt-4 text-right text-sm font-medium">— {quotes[currentQuote].author}</p>
+          <p className="text-base md:text-xl font-light italic leading-relaxed">
+            "{quotes[currentQuote].content}"
+          </p>
+          <p className="mt-2 md:mt-4 text-right text-xs md:text-sm font-medium">
+            — {quotes[currentQuote].author}
+          </p>
         </motion.div>
       </div>
 

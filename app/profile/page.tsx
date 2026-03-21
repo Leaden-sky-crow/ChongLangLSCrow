@@ -15,6 +15,11 @@ import { deleteSeries } from '@/app/series/actions'
 import { CommentsList } from '@/components/comments-list'
 import { getCommentsByUser } from '@/app/profile/actions'
 import Link from 'next/link'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: '个人主页',
+}
 
 export default async function ProfilePage() {
   const supabase = await createClient()
