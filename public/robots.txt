@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /posts
+Allow: /login
+Allow: /register
+Allow: /about
+Disallow: /create
+Disallow: /admin
+Disallow: /profile
+Disallow: /posts/*/edit
+Disallow: /api
+Disallow: /auth
+Disallow: /notifications
+Disallow: /series
+Disallow: /_next
+Disallow: /*.json$
+
+Sitemap: https://chonglanglscrow.cn/sitemap.xml

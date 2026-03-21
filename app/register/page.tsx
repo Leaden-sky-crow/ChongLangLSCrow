@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { z } from 'zod'
+import config from '@/config.json'
 
 const registerSchema = z.object({
   nickname: z.string().min(2, '昵称至少2个字符'),
@@ -99,8 +100,8 @@ export default function RegisterPage() {
         <CardHeader>
           <CardTitle className="text-2xl">注册</CardTitle>
           <CardDescription>
-            创建您的 ChongLangLSCrow 账号
-          </CardDescription>
+          创建您的 {config.title} 账号
+        </CardDescription>
         </CardHeader>
         <form onSubmit={handleRegister}>
           <CardContent className="grid gap-4">

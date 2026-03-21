@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/navbar";
+import config from '@/config.json'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,17 +18,17 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - ChongLangLSCrow',
-    default: 'ChongLangLSCrow',
+    template: `%s - ${config.title}`,
+    default: config.title,
   },
-  description: 'Share your novels, essays, and poetry with the world. Join our community of writers and readers.',
+  description: 'Share your stories with the world.',
   keywords: ['blog', 'novel', 'essay', 'poetry', 'writing', 'community'],
   authors: [{ name: 'ChongLangLSCrow Team' }],
   icons: {
     icon: '/favicon.jpg',
   },
   openGraph: {
-    title: 'ChongLangLSCrow',
+    title: config.title,
     description: 'Share your stories with the world.',
     type: 'website',
     url: 'https://chonglanglscrow.cn',
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
         url: 'https://chonglanglscrow.cn/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'ChongLangLSCrow',
+        alt: config.title,
       },
     ],
   },

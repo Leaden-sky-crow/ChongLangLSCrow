@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import config from '@/config.json'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -49,8 +50,8 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl">登录</CardTitle>
           <CardDescription>
-            输入您的邮箱和密码以登录 ChongLangLSCrow
-          </CardDescription>
+          输入您的邮箱和密码以登录 {config.title}
+        </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="grid gap-4">

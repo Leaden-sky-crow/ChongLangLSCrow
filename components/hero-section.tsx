@@ -6,10 +6,11 @@ import { ChevronDown } from 'lucide-react'
 
 interface HeroSectionProps {
   title: string
+  subtitle?: string
   quotes: { content: string; author: string }[]
 }
 
-export function HeroSection({ title, quotes }: HeroSectionProps) {
+export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
   const { scrollY } = useScroll()
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
   const y = useTransform(scrollY, [0, 300], [0, 100])
@@ -51,9 +52,16 @@ export function HeroSection({ title, quotes }: HeroSectionProps) {
       <motion.div 
         className="absolute inset-0 flex items-center justify-center pointer-events-none px-4 -mt-20"
       >
-        <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white drop-shadow-2xl tracking-tight text-center break-words">
-          {title}
-        </h1>
+        <div className="text-center">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white drop-shadow-2xl tracking-tight break-words">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="mt-6 text-xl sm:text-2xl md:text-3xl text-white/90 font-light tracking-wide">
+              {subtitle}
+            </p>
+          )}
+        </div>
       </motion.div>
       
       {/* Scroll Indicator (Optional but helpful) */}

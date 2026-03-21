@@ -1,3 +1,4 @@
+import config from '@/config.json'
 import Link from "next/link"
 import { Search, BookOpen, PenTool, Feather, User, PenSquare, Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -30,7 +31,7 @@ export async function Navbar() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <img src="/favicon.jpg" alt="Logo" className="h-6 w-6 rounded-full" />
             <span className="hidden font-bold sm:inline-block">
-              ChongLangLSCrow
+              {config.title}
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">

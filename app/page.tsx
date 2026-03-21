@@ -35,7 +35,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
 
   return (
     <main className="min-h-screen flex flex-col">
-      <HeroSection title={config.title} quotes={config.quotes} />
+      <HeroSection title={config.title} subtitle={config.subtitle} quotes={config.quotes} />
       
       <div className="container py-8 relative z-10 bg-background/50 backdrop-blur-sm rounded-t-3xl min-h-[500px]" id="content">
         <CategoryContent 
