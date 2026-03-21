@@ -1,6 +1,6 @@
 import config from '@/config.json'
 import Link from "next/link"
-import { Search, BookOpen, PenTool, Feather, User, PenSquare, Bell } from "lucide-react"
+import { Search, BookOpen, PenTool, Feather, User, PenSquare, Bell, Folder } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/utils/supabase/server"
 import { UserNav } from "@/components/user-nav"
@@ -50,6 +50,10 @@ export async function Navbar() {
             <Link href="/posts?category=poetry" className="flex items-center transition-colors hover:text-foreground/80 text-foreground/60">
               <Feather className="mr-1 h-4 w-4" />
               诗歌
+            </Link>
+            <Link href="/series" className="flex items-center transition-colors hover:text-foreground/80 text-foreground/60">
+              <Folder className="mr-1 h-4 w-4" />
+              系列
             </Link>
             <Link href="/about" className="flex items-center transition-colors hover:text-foreground/80 text-foreground/60">
               <User className="mr-1 h-4 w-4" />

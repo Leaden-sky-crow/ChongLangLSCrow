@@ -9,9 +9,13 @@ export function PostsCategoryFilter() {
   const currentCategory = searchParams.get('category') || 'all'
 
   const handleCategoryChange = (categoryId: string) => {
-    const newParams = new URLSearchParams(searchParams.toString())
-    newParams.set('category', categoryId)
-    router.push(`/posts?${newParams.toString()}`)
+    if (categoryId === 'series') {
+      router.push('/series')
+    } else {
+      const newParams = new URLSearchParams(searchParams.toString())
+      newParams.set('category', categoryId)
+      router.push(`/posts?${newParams.toString()}`)
+    }
   }
 
   return (

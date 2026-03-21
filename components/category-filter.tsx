@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { BookOpen, PenTool, Feather, User, Layers } from 'lucide-react'
+import { BookOpen, PenTool, Feather, User, Layers, Folder } from 'lucide-react'
 
 const categories = [
   { id: 'all', label: '全部', icon: Layers },
   { id: 'novel', label: '小说', icon: BookOpen },
   { id: 'essay', label: '散文', icon: PenTool },
   { id: 'poetry', label: '诗歌', icon: Feather },
+  { id: 'series', label: '系列', icon: Folder },
   { id: 'about', label: '关于我', icon: User },
 ]
 

@@ -135,3 +135,53 @@ export const searchPosts = cache(async (queryStr: string) => {
     comments_count: post.comments?.[0]?.count || 0,
   }))
 })
+
+export const searchSeries = cache(async (queryStr: string) => {
+  const supabase = await createClient()
+  
+  const { data: seriesData, error } = await supabase
+    .from('series')
+    .select(`
+      *,
+      author:profiles(
+        nickname,
+        avatar_url
+      )
+    `)
+    .or(`name.ilike.%${queryStr}%,description.ilike.%${queryStr}%`)
+    .order('created_at', { ascending: false })
+    .limit(20)
+
+  if (error) {
+    console.error('Error searching series:', error)
+    return []
+  }
+
+  const seriesWithStats = await Promise.all(
+    seriesData.map(async (series) => {
+      const { data: postsData } = await supabase
+        .from('posts')
+        .select('id, title, created_at, likes_count, comments_count')
+        .eq('series_id', series.id)
+        .order('created_at', { ascending: false })
+        .limit(3)
+
+      const { data: statsData } = await supabase
+        .from('posts')
+        .select('likes_count, comments_count')
+        .eq('series_id', series.id)
+
+      const total_likes = statsData?.reduce((sum, post) => sum + (post.likes_count || 0), 0) || 0
+      const total_comments = statsData?.reduce((sum, post) => sum + (post.comments_count || 0), 0) || 0
+
+      return {
+        ...series,
+        latest_posts: postsData?.map(post => ({ id: post.id, title: post.title })) || [],
+        total_likes,
+        total_comments,
+      }
+    })
+  )
+
+  return seriesWithStats
+})

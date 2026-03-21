@@ -22,10 +22,13 @@ export function CategoryContent({ initialCategory = 'all', aboutContent, initial
 
   const handleCategoryChange = (categoryId: string) => {
     startTransition(() => {
-      const newParams = new URLSearchParams(searchParams.toString())
-      newParams.set('category', categoryId)
-      // 添加 { scroll: false } 禁用自动滚动到页面顶部
-      router.push(`?${newParams.toString()}`, { scroll: false })
+      if (categoryId === 'series') {
+        router.push('/series')
+      } else {
+        const newParams = new URLSearchParams(searchParams.toString())
+        newParams.set('category', categoryId)
+        router.push(`?${newParams.toString()}`, { scroll: false })
+      }
     })
   }
 

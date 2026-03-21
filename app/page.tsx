@@ -19,7 +19,7 @@ const getAboutContent = cache(async () => {
 })
 
 export const metadata: Metadata = {
-  title: '主页',
+  title: config.title,
 }
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ category?: string }> }) {

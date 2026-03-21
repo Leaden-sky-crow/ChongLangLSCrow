@@ -93,3 +93,94 @@ export async function updateSeries(
   revalidatePath('/profile')
   return { success: true, data }
 }
+
+export async function getAllSeries() {
+  const supabase = await createClient()
+  
+  const { data: seriesData, error } = await supabase
+    .from('series')
+    .select(`
+      *,
+      author:profiles(
+        nickname,
+        avatar_url
+      )
+    `)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('获取系列列表失败:', error)
+    return []
+  }
+
+  const seriesWithStats = await Promise.all(
+    seriesData.map(async (series) => {
+      const { data: postsData } = await supabase
+        .from('posts')
+        .select('id, title, created_at, likes_count, comments_count')
+        .eq('series_id', series.id)
+        .order('created_at', { ascending: false })
+        .limit(3)
+
+      const { data: statsData } = await supabase
+        .from('posts')
+        .select('likes_count, comments_count')
+        .eq('series_id', series.id)
+
+      const total_likes = statsData?.reduce((sum, post) => sum + (post.likes_count || 0), 0) || 0
+      const total_comments = statsData?.reduce((sum, post) => sum + (post.comments_count || 0), 0) || 0
+
+      return {
+        ...series,
+        latest_posts: postsData?.map(post => ({ id: post.id, title: post.title })) || [],
+        total_likes,
+        total_comments,
+      }
+    })
+  )
+
+  return seriesWithStats
+}
+
+export async function getSeriesById(seriesId: string) {
+  const supabase = await createClient()
+  
+  const { data: seriesData, error } = await supabase
+    .from('series')
+    .select(`
+      *,
+      author:profiles(
+        nickname,
+        avatar_url
+      )
+    `)
+    .eq('id', seriesId)
+    .single()
+
+  if (error || !seriesData) {
+    console.error('获取系列详情失败:', error)
+    return null
+  }
+
+  const { data: postsData } = await supabase
+    .from('posts')
+    .select(`
+      *,
+      author:profiles(
+        nickname,
+        avatar_url
+      )
+    `)
+    .eq('series_id', seriesId)
+    .order('created_at', { ascending: false })
+
+  const total_likes = postsData?.reduce((sum, post) => sum + (post.likes_count || 0), 0) || 0
+  const total_comments = postsData?.reduce((sum, post) => sum + (post.comments_count || 0), 0) || 0
+
+  return {
+    ...seriesData,
+    posts: postsData || [],
+    total_likes,
+    total_comments,
+  }
+}
