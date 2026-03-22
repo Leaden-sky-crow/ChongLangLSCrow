@@ -1,12 +1,14 @@
-# About Me
+# 关于我
 
-## Hello! 👋
+## 某些时刻在我的生命中过早地被掩埋，仅留下的微小印象与感情在回忆中也毫不怜惜地轻轻逝去。然而在遗忘的一切里亦记录着人生的倒影，无形之所在亦是灵之所在。
+## 这里是我为了忘却而作的细小战场，惟此一行，将我的爱弃置于此。
 
-I am the creator of **虫狼LSCrow**.
+这里是**虫狼LSCrow**的个人网站，**万年忘却录**是我的个人写作合辑
 
-This is a multi-user blog platform dedicated to sharing:
-- 📖 Novels
-- ✍️ prose
-- 📜 Poetry
+这是一个多用户博客平台，致力于分享：
+- 📖 小说
+- ✍️ 散文
+- 📜 诗歌
 
-Feel free to explore and share your own stories!
+随意浏览并分享你自己的故事
+## 感谢墨瞳tao的技术支持！ ##
