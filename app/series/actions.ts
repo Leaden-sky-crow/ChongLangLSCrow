@@ -79,7 +79,6 @@ export async function updateSeries(
     .update({
       name,
       description,
-      updated_at: new Date().toISOString(),
     })
     .eq('id', seriesId)
     .eq('author_id', user.id)

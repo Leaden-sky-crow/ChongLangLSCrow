@@ -26,9 +26,10 @@ interface CommentsProps {
   postId: string
   comments: Comment[]
   currentUserId?: string
+  isAdmin?: boolean
 }
 
-export function Comments({ postId, comments, currentUserId }: CommentsProps) {
+export function Comments({ postId, comments, currentUserId, isAdmin = false }: CommentsProps) {
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -102,7 +103,7 @@ export function Comments({ postId, comments, currentUserId }: CommentsProps) {
                     {format(new Date(comment.created_at), 'PPP p', { locale: zhCN })}
                   </span>
                 </div>
-                {currentUserId === comment.user_id && (
+                {currentUserId && (currentUserId === comment.user_id || isAdmin) && (
                   <Button variant="ghost" size="icon" onClick={() => handleDelete(comment.id)}>
                     <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
                   </Button>

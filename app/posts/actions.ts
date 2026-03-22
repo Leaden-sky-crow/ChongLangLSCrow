@@ -76,6 +76,15 @@ export async function deleteComment(commentId: string, postId: string) {
 
   if (!user) return { error: 'Unauthorized' }
 
+  // 检查是否为管理员
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  const isAdmin = profile?.role === 'admin'
+
   const { data: existingComment } = await supabase
     .from('comments')
     .select('user_id')
@@ -86,7 +95,8 @@ export async function deleteComment(commentId: string, postId: string) {
     return { error: '评论不存在' }
   }
 
-  if (existingComment.user_id !== user.id) {
+  // 管理员可以删除任何评论，普通用户只能删除自己的
+  if (!isAdmin && existingComment.user_id !== user.id) {
     return { error: 'Unauthorized' }
   }
 
@@ -94,7 +104,6 @@ export async function deleteComment(commentId: string, postId: string) {
     .from('comments')
     .delete()
     .eq('id', commentId)
-    .eq('user_id', user.id)
 
   if (error) {
     console.error('删除评论失败:', error)

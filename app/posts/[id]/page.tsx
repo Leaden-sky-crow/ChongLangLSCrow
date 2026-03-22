@@ -60,6 +60,17 @@ export default async function PostPage({ params }: Props) {
 
   const { data: { user } } = userResult
 
+  // 检查用户是否为管理员
+  let isAdmin = false
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    isAdmin = profile?.role === 'admin'
+  }
+  
   // Check if user liked the post
   let isLiked = false
   if (user) {
@@ -95,7 +106,12 @@ export default async function PostPage({ params }: Props) {
            <LikeButton postId={post.id} initialCount={post.likes_count} initialIsLiked={isLiked} />
         </div>
 
-        <Comments postId={post.id} comments={formattedComments} currentUserId={user?.id} />
+        <Comments 
+          postId={post.id} 
+          comments={formattedComments} 
+          currentUserId={user?.id}
+          isAdmin={isAdmin}
+        />
       </div>
     </article>
   )
