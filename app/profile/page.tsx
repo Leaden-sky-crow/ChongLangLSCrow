@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { PostList } from '@/components/post-list'
 import { EditProfileDialog } from '@/components/edit-profile-dialog'
 import { CreateSeriesDialog } from '@/components/create-series-dialog'
+import { EditSeriesDialog } from '@/components/edit-series-dialog'
 import { DeletePostDialog } from '@/components/delete-post-dialog'
 import { DeleteSeriesDialog } from '@/components/delete-series-dialog'
 import { Button } from '@/components/ui/button'
@@ -161,12 +162,17 @@ export default async function ProfilePage() {
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {mySeries?.map((series: any) => (
-              <Card key={series.id} className="relative">
+              <Card key={series.id} className="relative group">
                 <CardHeader>
                   <CardTitle>{series.name}</CardTitle>
                   <CardDescription>{series.description}</CardDescription>
                 </CardHeader>
-                <div className="absolute top-2 right-2">
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <EditSeriesDialog 
+                    seriesId={series.id} 
+                    seriesName={series.name}
+                    seriesDescription={series.description}
+                  />
                   <DeleteSeriesDialog seriesId={series.id} seriesName={series.name} />
                 </div>
               </Card>
