@@ -45,6 +45,7 @@ export default function CreatePage() {
   const { theme } = useTheme()
   const [loading, setLoading] = useState(false)
   const [autoSaving, setAutoSaving] = useState(false)
+  const [currentDraftId, setCurrentDraftId] = useState<string | null>(null)
   const [lastSavedContent, setLastSavedContent] = useState('')
   const [content, setContent] = useState('**开始你的创作...**')
   const [seriesList, setSeriesList] = useState<{ id: string; name: string }[]>([])
@@ -154,6 +155,9 @@ export default function CreatePage() {
         setFormData(parsed.formData)
         setContent(parsed.content)
         setLastSavedContent(parsed.content)
+        if (parsed.draftId) {
+          setCurrentDraftId(parsed.draftId)
+        }
         toast.info('已恢复上次未保存的草稿')
       } catch (e) {
         console.error('Failed to restore draft', e)
@@ -164,10 +168,10 @@ export default function CreatePage() {
   // Auto-save to localStorage (keep for backup)
   useEffect(() => {
     const timer = setTimeout(() => {
-      localStorage.setItem('draft_post', JSON.stringify({ formData, content }))
+      localStorage.setItem('draft_post', JSON.stringify({ formData, content, draftId: currentDraftId }))
     }, 1000)
     return () => clearTimeout(timer)
-  }, [formData, content])
+  }, [formData, content, currentDraftId])
 
   // Auto-save draft to server every 60 seconds
   useEffect(() => {
@@ -185,11 +189,21 @@ export default function CreatePage() {
           data.append('series_id', formData.series_id)
           data.append('content', content)
           data.append('status', 'draft')
+          if (currentDraftId) {
+            data.append('draftId', currentDraftId)
+          }
 
           const result = await createPost(data)
           
           if (result?.success) {
-            toast.success('草稿已自动保存')
+            if (result.updated) {
+              toast.success('草稿已自动更新')
+            } else {
+              toast.success('草稿已自动保存')
+              if (result.id) {
+                setCurrentDraftId(result.id)
+              }
+            }
             setLastSavedContent(content)
           } else {
             console.error('自动保存失败:', result?.error)
@@ -203,7 +217,7 @@ export default function CreatePage() {
     }, 60000) // 60 seconds
 
     return () => clearInterval(interval)
-  }, [content, formData, lastSavedContent, autoSaving])
+  }, [content, formData, lastSavedContent, currentDraftId, autoSaving])
 
   const handleSubmit = async (status: 'draft' | 'pending') => {
     if (!formData.title || !content) {
@@ -219,6 +233,9 @@ export default function CreatePage() {
     data.append('series_id', formData.series_id)
     data.append('content', content)
     data.append('status', status)
+    if (currentDraftId && status === 'draft') {
+      data.append('draftId', currentDraftId)
+    }
 
     const result = await createPost(data)
 
@@ -227,6 +244,7 @@ export default function CreatePage() {
     } else {
       toast.success(status === 'draft' ? '草稿已保存' : '投稿已提交，请等待审核')
       localStorage.removeItem('draft_post')
+      setCurrentDraftId(null)
       router.push('/profile')
     }
     setLoading(false)

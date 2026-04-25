@@ -3,6 +3,7 @@ import { zhCN } from 'date-fns/locale'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { getCategoryName } from '@/lib/utils'
+import Link from 'next/link'
 
 export function PostHeader({ post }: { post: any }) {
   return (
@@ -29,16 +30,18 @@ export function PostHeader({ post }: { post: any }) {
           
           <div className="flex items-center justify-between pt-4">
              <div className="flex items-center space-x-3">
-               <Avatar>
-                 <AvatarImage src={post.author?.avatar_url} />
-                 <AvatarFallback>{post.author?.nickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
-               </Avatar>
-               <div>
-                 <p className="text-sm font-medium">{post.author?.nickname}</p>
-                 <p className="text-xs text-muted-foreground">
-                   {format(new Date(post.created_at), 'PPP p', { locale: zhCN })}
-                 </p>
-               </div>
+               <Link href={`/user/${post.author_id}`} className="flex items-center space-x-3 cursor-pointer">
+                 <Avatar>
+                   <AvatarImage src={post.author?.avatar_url} />
+                   <AvatarFallback>{post.author?.nickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                 </Avatar>
+                 <div>
+                   <p className="text-sm font-medium hover:underline">{post.author?.nickname}</p>
+                   <p className="text-xs text-muted-foreground">
+                     {format(new Date(post.created_at), 'PPP p', { locale: zhCN })}
+                   </p>
+                 </div>
+               </Link>
              </div>
              <div className="text-sm text-muted-foreground">
                阅读 {post.view_count}

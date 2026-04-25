@@ -10,6 +10,7 @@ import { zhCN } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { Loader2, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 interface Comment {
   id: string
@@ -91,14 +92,18 @@ export function Comments({ postId, comments, currentUserId, isAdmin = false }: C
       <div className="space-y-6">
         {comments.map((comment) => (
           <div key={comment.id} className="flex space-x-4">
-            <Avatar>
-              <AvatarImage src={comment.user?.avatar_url} />
-              <AvatarFallback>{comment.user?.nickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
+            <Link href={`/user/${comment.user_id}`} className="flex-shrink-0 cursor-pointer">
+              <Avatar>
+                <AvatarImage src={comment.user?.avatar_url} />
+                <AvatarFallback>{comment.user?.nickname?.slice(0, 2).toUpperCase()}</AvatarFallback>
+              </Avatar>
+            </Link>
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <span className="font-semibold">{comment.user?.nickname || 'Unknown'}</span>
+                  <Link href={`/user/${comment.user_id}`} className="font-semibold hover:underline cursor-pointer">
+                    {comment.user?.nickname || 'Unknown'}
+                  </Link>
                   <span className="text-xs text-muted-foreground">
                     {format(new Date(comment.created_at), 'PPP p', { locale: zhCN })}
                   </span>
