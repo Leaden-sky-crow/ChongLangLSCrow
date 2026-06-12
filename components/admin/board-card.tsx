@@ -20,6 +20,7 @@ interface BoardCardProps {
     category: string
     created_at: string
     author: { nickname: string }
+    series_name: string | null
   }
   showActions?: boolean
 }
@@ -59,10 +60,15 @@ export function BoardCard({ post, showActions = false }: BoardCardProps) {
             <FileText className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
             <p className="text-sm font-medium line-clamp-2 leading-snug">{post.title}</p>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center flex-wrap gap-1.5 text-xs text-muted-foreground">
             <Badge variant="outline" className="text-[10px] px-1 py-0">
               {getCategoryName(post.category)}
             </Badge>
+            {post.series_name && (
+              <Badge variant="secondary" className="text-[10px] px-1 py-0">
+                {post.series_name}
+              </Badge>
+            )}
             <span>{post.author?.nickname || 'Unknown'}</span>
             <span>·</span>
             <span>{formatDistanceToNow(new Date(post.created_at), { locale: zhCN, addSuffix: true })}</span>

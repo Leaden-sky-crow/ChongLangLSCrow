@@ -1,8 +1,18 @@
 'use client'
 
+import { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Users, AlertCircle, FileText, FilePenLine, CheckCircle2 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { BookOpen, Users, AlertCircle, FileText, FilePenLine, CheckCircle2, Search, X, RotateCcw } from 'lucide-react'
 import { BoardCard } from '@/components/admin/board-card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface Post {
   id: string
@@ -11,6 +21,15 @@ interface Post {
   category: string
   created_at: string
   author: { nickname: string }
+  summary: string
+  content: string
+  series_id: string | null
+  series_name: string | null
+}
+
+interface Series {
+  id: string
+  name: string
 }
 
 interface StatsProps {
@@ -26,12 +45,46 @@ interface StatsProps {
     admins: number
   }
   posts: Post[]
+  allSeries: Series[]
 }
 
-export function AdminOverview({ postStats, userStats, posts }: StatsProps) {
-  const draftPosts = posts.filter(p => p.status === 'draft')
-  const pendingPosts = posts.filter(p => p.status === 'pending')
-  const publishedPosts = posts.filter(p => p.status === 'published')
+export function AdminOverview({ postStats, userStats, posts, allSeries }: StatsProps) {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [selectedSeries, setSelectedSeries] = useState('')
+
+  const filteredPosts = useMemo(() => {
+    return posts.filter(post => {
+      const matchesSearch = !searchQuery ||
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.content.toLowerCase().includes(searchQuery.toLowerCase())
+
+      const postDate = new Date(post.created_at)
+      const matchesStartDate = !startDate || postDate >= new Date(startDate)
+      const matchesEndDate = !endDate || postDate <= new Date(endDate + 'T23:59:59')
+
+      const matchesSeries = !selectedSeries || selectedSeries === '__none__'
+        ? selectedSeries === '__none__' ? post.series_id === null : true
+        : post.series_id === selectedSeries
+
+      return matchesSearch && matchesStartDate && matchesEndDate && matchesSeries
+    })
+  }, [posts, searchQuery, startDate, endDate, selectedSeries])
+
+  const draftPosts = filteredPosts.filter(p => p.status === 'draft')
+  const pendingPosts = filteredPosts.filter(p => p.status === 'pending')
+  const publishedPosts = filteredPosts.filter(p => p.status === 'published')
+
+  const hasFilters = searchQuery || startDate || endDate || selectedSeries
+
+  const handleReset = () => {
+    setSearchQuery('')
+    setStartDate('')
+    setEndDate('')
+    setSelectedSeries('')
+  }
 
   return (
     <div className="space-y-6">
@@ -90,6 +143,72 @@ export function AdminOverview({ postStats, userStats, posts }: StatsProps) {
           </CardContent>
         </Card>
       </div>
+
+      <div className="flex flex-wrap items-end gap-3 rounded-lg border p-4">
+        <div className="flex-1 min-w-[200px]">
+          <label className="text-sm font-medium mb-1.5 block">搜索</label>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="搜索标题或内容..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-2.5 top-2.5">
+                <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="min-w-[150px]">
+          <label className="text-sm font-medium mb-1.5 block">开始日期</label>
+          <Input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+        <div className="min-w-[150px]">
+          <label className="text-sm font-medium mb-1.5 block">截止日期</label>
+          <Input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
+        <div className="min-w-[150px]">
+          <label className="text-sm font-medium mb-1.5 block">系列</label>
+          <Select value={selectedSeries} onValueChange={(value) => setSelectedSeries(value ?? '')}>
+            <SelectTrigger>
+              <SelectValue placeholder="全部系列" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">全部系列</SelectItem>
+              <SelectItem value="__none__">无系列</SelectItem>
+              {allSeries.map((series) => (
+                <SelectItem key={series.id} value={series.id}>
+                  {series.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {hasFilters && (
+          <Button variant="outline" size="sm" onClick={handleReset} className="mb-0.5">
+            <RotateCcw className="h-4 w-4 mr-1" />
+            重置
+          </Button>
+        )}
+      </div>
+
+      {hasFilters && (
+        <p className="text-sm text-muted-foreground">
+          筛选结果：共 {filteredPosts.length} 篇文章
+          {filteredPosts.length !== posts.length && ` (共 ${posts.length} 篇)`}
+        </p>
+      )}
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="space-y-3">

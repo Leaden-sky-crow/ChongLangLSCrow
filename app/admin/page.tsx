@@ -57,16 +57,21 @@ export default async function AdminPage() {
   }
 
   // Parallel data fetching - avoid waterfalls
-  const [postsResult, usersResult] = await Promise.all([
+  const [postsResult, usersResult, seriesResult] = await Promise.all([
     supabase
       .from('posts')
-      .select('*, author:profiles!author_id(nickname)')
+      .select('*, author:profiles!author_id(nickname), series:series_id(id, name)')
       .order('created_at', { ascending: false }),
-    getUsers()
+    getUsers(),
+    supabase
+      .from('series')
+      .select('id, name')
+      .order('name')
   ])
 
   const posts = postsResult.data
   const users = usersResult.users || []
+  const allSeries = seriesResult.data || []
 
   // Handle errors from getUsers
   if (usersResult.error) {
@@ -85,6 +90,10 @@ export default async function AdminPage() {
     category: post.category,
     created_at: post.created_at,
     author: Array.isArray(post.author) ? post.author[0] : post.author,
+    summary: post.summary || '',
+    content: post.content || '',
+    series_id: post.series_id || null,
+    series_name: post.series?.name || null,
   })
 
   return (
@@ -108,7 +117,7 @@ export default async function AdminPage() {
         </TabsList>
 
         <TabsContent value="dashboard">
-          <AdminOverview postStats={postStats} userStats={userStats} posts={posts?.map(transformPost) || []} />
+          <AdminOverview postStats={postStats} userStats={userStats} posts={posts?.map(transformPost) || []} allSeries={allSeries} />
         </TabsContent>
 
         <TabsContent value="posts">
