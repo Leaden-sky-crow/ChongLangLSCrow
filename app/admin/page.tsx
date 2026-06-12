@@ -31,6 +31,7 @@ const checkAdminRole = cache(async (userId: string) => {
 // Cache stats calculation
 const calculatePostStats = cache((posts: any[]) => ({
   total: posts?.length || 0,
+  draft: posts?.filter(p => p.status === 'draft').length || 0,
   pending: posts?.filter(p => p.status === 'pending').length || 0,
   published: posts?.filter(p => p.status === 'published').length || 0,
   rejected: posts?.filter(p => p.status === 'rejected').length || 0,
@@ -107,7 +108,7 @@ export default async function AdminPage() {
         </TabsList>
 
         <TabsContent value="dashboard">
-          <AdminOverview postStats={postStats} userStats={userStats} />
+          <AdminOverview postStats={postStats} userStats={userStats} posts={posts?.map(transformPost) || []} />
         </TabsContent>
 
         <TabsContent value="posts">
