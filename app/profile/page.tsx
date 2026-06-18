@@ -125,19 +125,18 @@ export default async function ProfilePage() {
                       post.status === 'draft' ? '草稿' : '审核中'}
                    </Badge>
                  </div>
-                 <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                   <Link href={`/posts/${post.id}/edit`}>
-                     <Button
-                       variant="outline"
-                       size="sm"
-                       className="opacity-0 group-hover:opacity-100 transition-opacity"
-                     >
-                       <Edit2 className="mr-2 h-4 w-4" />
-                       编辑
-                     </Button>
-                   </Link>
-                   <DeletePostDialog postId={post.id} postTitle={post.title} />
-                 </div>
+                 <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                  <Link href={`/posts/${post.id}/edit`}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Edit2 className="mr-2 h-4 w-4" />
+                      编辑
+                    </Button>
+                  </Link>
+                  <DeletePostDialog postId={post.id} postTitle={post.title} />
+                </div>
                  <Link href={`/posts/${post.id}`} className="block">
                    <div className="border rounded-lg p-4 pt-12 h-full flex flex-col justify-between">
                      <div>
