@@ -34,7 +34,7 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
       </div>
 
       {/* Quote Carousel */}
-      <div className="absolute left-4 top-16 z-10 max-w-md text-white/90 md:left-16 md:top-32">
+      <div className="absolute left-4 top-20 z-10 max-w-[85vw] text-white/90 sm:max-w-md md:left-16 md:top-32">
         <motion.div
           key={currentQuote}
           initial={{ opacity: 0, x: -20 }}
@@ -43,10 +43,10 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
           transition={{ duration: 0.8 }}
           className="bg-black/20 p-4 rounded-lg backdrop-blur-sm border border-white/10 md:p-6"
         >
-          <p className="text-base md:text-xl font-light italic leading-relaxed">
+          <p className="font-serif text-base md:text-xl font-light leading-relaxed">
             "{quotes[currentQuote].content}"
           </p>
-          <p className="mt-2 md:mt-4 text-right text-xs md:text-sm font-medium">
+          <p className="mt-2 md:mt-4 text-right font-serif text-xs md:text-sm font-medium">
             — {quotes[currentQuote].author}
           </p>
         </motion.div>
@@ -57,11 +57,11 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
         className="absolute inset-0 flex items-center justify-center pointer-events-none px-4 -mt-20"
       >
         <div className="text-center">
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white drop-shadow-2xl tracking-tight break-words">
+          <h1 className="font-serif text-[clamp(2.5rem,8vw,6rem)] font-bold text-white drop-shadow-2xl tracking-tight text-balance leading-[1.15]">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-6 text-xl sm:text-2xl md:text-3xl text-white/90 font-light tracking-wide">
+            <p className="mt-6 font-serif text-[clamp(1.125rem,3vw,1.875rem)] text-white/90 font-light tracking-wide">
               {subtitle}
             </p>
           )}
@@ -70,7 +70,7 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
       
       {/* Scroll Indicator (Optional but helpful) */}
       <motion.div 
-        className="absolute bottom-16 left-1/2 -translate-x-1/2 text-white/70"
+        className="absolute bottom-24 left-1/2 -translate-x-1/2 text-white/70"
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 1.5 }}
         style={{ opacity }}

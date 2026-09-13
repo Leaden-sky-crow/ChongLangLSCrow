@@ -26,7 +26,7 @@ export function PostHeader({ post }: { post: any }) {
             {post.series && <Badge variant="outline">{post.series.name}</Badge>}
           </div>
           
-          <h1 className="text-4xl font-bold leading-tight md:text-5xl drop-shadow-sm">{post.title}</h1>
+          <h1 className="font-serif text-4xl font-bold leading-tight md:text-5xl drop-shadow-sm">{post.title}</h1>
           
           <div className="flex items-center justify-between pt-4">
              <div className="flex items-center space-x-3">

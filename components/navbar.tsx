@@ -7,6 +7,7 @@ import { UserNav } from "@/components/user-nav"
 import { ModeToggle } from "@/components/mode-toggle"
 import { SearchInput } from "@/components/search-input"
 import { NotificationBell } from "@/components/notification-bell"
+import { MobileNav } from "@/components/mobile-nav"
 
 export async function Navbar() {
   const supabase = await createClient()
@@ -67,6 +68,7 @@ export async function Navbar() {
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <MobileNav isAdmin={isAdmin} />
           <div className="w-full flex-1 md:w-auto md:flex-none">
             <SearchInput />
           </div>

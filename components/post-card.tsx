@@ -70,7 +70,7 @@ export function PostCard({ post }: { post: Post }) {
             {formattedDate}
           </div>
         </div>
-        <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">
+        <h3 className="font-serif text-xl font-bold leading-tight group-hover:text-primary transition-colors">
           {post.title}
         </h3>
       </CardHeader>

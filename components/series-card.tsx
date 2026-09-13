@@ -26,11 +26,11 @@ interface SeriesCardProps {
 export function SeriesCard({ series }: SeriesCardProps) {
   return (
     <Link href={`/series/${series.id}`}>
-      <Card className="h-full hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+      <Card className="h-full overflow-hidden transition-all hover:shadow-lg dark:hover:shadow-white/5 cursor-pointer">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h3 className="text-xl font-bold mb-2 line-clamp-1">{series.name}</h3>
+              <h3 className="font-serif text-xl font-bold mb-2 line-clamp-1">{series.name}</h3>
               <p className="text-muted-foreground text-sm line-clamp-2 min-h-[2.5rem]">
                 {series.description}
               </p>
