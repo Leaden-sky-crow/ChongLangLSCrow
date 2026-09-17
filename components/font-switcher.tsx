@@ -25,6 +25,7 @@ const SIZES = [
   { id: 'sm', label: '小' },
   { id: 'md', label: '中' },
   { id: 'lg', label: '大' },
+  { id: 'xl', label: '特大' },
 ]
 
 const DEFAULT_FONT = 'chillhuo'

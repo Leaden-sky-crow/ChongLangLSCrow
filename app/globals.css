@@ -157,6 +157,7 @@
 [data-font-size="sm"] { --font-reading-size: 0.9375rem; }
 [data-font-size="md"] { --font-reading-size: 1.0625rem; }
 [data-font-size="lg"] { --font-reading-size: 1.1875rem; }
+[data-font-size="xl"] { --font-reading-size: 1.3125rem; }
 
 .font-reading { font-family: var(--font-reading); }
 

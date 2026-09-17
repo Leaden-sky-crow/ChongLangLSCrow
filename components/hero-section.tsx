@@ -40,7 +40,7 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
       </div>
 
       {/* Quote Carousel */}
-      <div className="absolute left-0 top-0 z-10 w-[min(90vw,26rem)] text-white/90">
+      <div className="absolute left-4 top-4 z-10 w-[min(90vw,26rem)] text-white/90">
         <motion.div
           key={currentQuote}
           initial={{ opacity: 0, x: -20 }}
@@ -55,8 +55,8 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
           }}
           role="button"
           tabIndex={0}
-          title="点击切换语录"
-          className="cursor-pointer select-none rounded-br-2xl border border-white/25 bg-black/25 p-4 shadow-xl shadow-black/20 backdrop-blur-md md:p-5"
+          title="点击切换"
+          className="cursor-pointer select-none rounded-md border border-white/25 bg-black/25 p-4 shadow-xl shadow-black/20 backdrop-blur-md md:p-5"
         >
           <p className="font-reading text-base font-light leading-relaxed md:text-lg">
             "{quotes[currentQuote].content}"
@@ -64,9 +64,6 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
           <p className="mt-2 text-right font-reading text-xs font-medium md:mt-3 md:text-sm">
             — {quotes[currentQuote].author}
           </p>
-          <div className="mt-2 text-right text-[10px] text-white/50 md:mt-3">
-            {currentQuote + 1} / {quotes.length}
-          </div>
         </motion.div>
       </div>
 
