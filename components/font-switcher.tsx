@@ -6,6 +6,7 @@ import { buttonVariants } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -73,23 +74,27 @@ export function FontSwitcher() {
         <Type className="h-5 w-5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>字体</DropdownMenuLabel>
-        {FONTS.map((f) => (
-          <DropdownMenuItem key={f.id} onClick={() => changeFont(f.id)}>
-            <span className="flex-1" style={{ fontFamily: f.family }}>
-              {f.label}
-            </span>
-            {font === f.id && <Check className="h-4 w-4 text-primary" />}
-          </DropdownMenuItem>
-        ))}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>字体</DropdownMenuLabel>
+          {FONTS.map((f) => (
+            <DropdownMenuItem key={f.id} onClick={() => changeFont(f.id)}>
+              <span className="flex-1" style={{ fontFamily: f.family }}>
+                {f.label}
+              </span>
+              {font === f.id && <Check className="h-4 w-4 text-primary" />}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuLabel>字号</DropdownMenuLabel>
-        {SIZES.map((s) => (
-          <DropdownMenuItem key={s.id} onClick={() => changeSize(s.id)}>
-            <span className="flex-1">{s.label}</span>
-            {size === s.id && <Check className="h-4 w-4 text-primary" />}
-          </DropdownMenuItem>
-        ))}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>字号</DropdownMenuLabel>
+          {SIZES.map((s) => (
+            <DropdownMenuItem key={s.id} onClick={() => changeSize(s.id)}>
+              <span className="flex-1">{s.label}</span>
+              {size === s.id && <Check className="h-4 w-4 text-primary" />}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   )
