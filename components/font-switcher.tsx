@@ -19,6 +19,8 @@ const FONTS = [
   { id: 'zhuque', label: '朱雀仿宋体', family: '"Zhuque Fangsong (technical preview)", serif' },
   { id: 'wenkai', label: '霞鹭文楷', family: '"LXGW WenKai", cursive' },
   { id: 'unifont', label: 'Unifont 像素体', family: '"Unifont", monospace' },
+  { id: 'huiwen', label: '汇文明朝体', family: '"Huiwen-mincho", serif' },
+  { id: 'kinghwa', label: '京华老宋体', family: '"KingHwaOldSong", serif' },
 ]
 
 const SIZES = [
