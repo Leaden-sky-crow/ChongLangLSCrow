@@ -8,6 +8,7 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { SearchInput } from "@/components/search-input"
 import { NotificationBell } from "@/components/notification-bell"
 import { MobileNav } from "@/components/mobile-nav"
+import { FontSwitcher } from "@/components/font-switcher"
 
 export async function Navbar() {
   const supabase = await createClient()
@@ -84,6 +85,7 @@ export async function Navbar() {
             </Link>
           )}
           <ModeToggle />
+          <FontSwitcher />
           {user ? (
             <>
               <NotificationBell />

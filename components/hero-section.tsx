@@ -15,13 +15,19 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
   const y = useTransform(scrollY, [0, 300], [0, 100])
   const [currentQuote, setCurrentQuote] = useState(0)
+  const [resetKey, setResetKey] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentQuote((prev) => (prev + 1) % quotes.length)
     }, 10000)  // 10 秒轮播
     return () => clearInterval(interval)
-  }, [quotes.length])
+  }, [quotes.length, resetKey])
+
+  const handleQuoteClick = () => {
+    setCurrentQuote((prev) => (prev + 1) % quotes.length)
+    setResetKey((k) => k + 1)  // 手动切换后重置自动轮播计时器
+  }
 
   return (
     <div className="relative h-screen min-h-[500px] w-full overflow-hidden">
@@ -34,21 +40,34 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
       </div>
 
       {/* Quote Carousel */}
-      <div className="absolute left-4 top-20 z-10 max-w-[85vw] text-white/90 sm:max-w-md md:left-16 md:top-32">
+      <div className="absolute left-4 top-20 z-10 max-w-[70vw] text-white/90 sm:max-w-xs md:left-16 md:top-32">
         <motion.div
           key={currentQuote}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 20 }}
           transition={{ duration: 0.8 }}
-          className="bg-black/20 p-4 rounded-lg backdrop-blur-sm border border-white/10 md:p-6"
+          onClick={handleQuoteClick}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleQuoteClick()
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          title="点击切换语录"
+          className="cursor-pointer select-none bg-black/20 p-3 rounded-lg backdrop-blur-sm border border-white/10 md:p-4"
         >
-          <p className="font-serif text-base md:text-xl font-light leading-relaxed">
+          <p className="font-reading text-sm md:text-base font-light leading-relaxed">
             "{quotes[currentQuote].content}"
           </p>
-          <p className="mt-2 md:mt-4 text-right font-serif text-xs md:text-sm font-medium">
+          <p className="mt-2 text-right font-reading text-xs font-medium">
             — {quotes[currentQuote].author}
           </p>
+          <div className="mt-2 flex items-center justify-between text-[10px] text-white/50">
+            <span>{currentQuote + 1} / {quotes.length}</span>
+            <span>点击切换 ▸</span>
+          </div>
         </motion.div>
       </div>
 
@@ -57,11 +76,11 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
         className="absolute inset-0 flex items-center justify-center pointer-events-none px-4 -mt-20"
       >
         <div className="text-center">
-          <h1 className="font-serif text-[clamp(2.5rem,8vw,6rem)] font-bold text-white drop-shadow-2xl tracking-tight text-balance leading-[1.15]">
+          <h1 className="font-reading text-[clamp(2.5rem,8vw,6rem)] font-bold text-white drop-shadow-2xl tracking-tight text-balance leading-[1.15]">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-6 font-serif text-[clamp(1.125rem,3vw,1.875rem)] text-white/90 font-light tracking-wide">
+            <p className="mt-6 font-reading text-[clamp(1.125rem,3vw,1.875rem)] text-white/90 font-light tracking-wide">
               {subtitle}
             </p>
           )}

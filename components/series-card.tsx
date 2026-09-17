@@ -30,7 +30,7 @@ export function SeriesCard({ series }: SeriesCardProps) {
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h3 className="font-serif text-xl font-bold mb-2 line-clamp-1">{series.name}</h3>
+              <h3 className="font-reading text-xl font-bold mb-2 line-clamp-1">{series.name}</h3>
               <p className="text-muted-foreground text-sm line-clamp-2 min-h-[2.5rem]">
                 {series.description}
               </p>

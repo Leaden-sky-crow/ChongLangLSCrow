@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Serif_SC } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -16,13 +17,6 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const notoSerifSC = Noto_Serif_SC({
-  variable: "--font-noto-serif-sc",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -61,9 +55,12 @@ export default function RootLayout({
     <html
       lang="zh-CN"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${notoSerifSC.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="antialiased">
+        <Script id="restore-reading-settings" strategy="beforeInteractive">
+          {`try{var d=document.documentElement;d.dataset.font=localStorage.getItem('font')||'chillhuo';d.dataset.fontSize=localStorage.getItem('fontSize')||'md'}catch(e){}`}
+        </Script>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
