@@ -2,7 +2,7 @@ import config from '@/config.json'
 import Link from "next/link"
 import { Search, BookOpen, PenTool, Feather, User, PenSquare, Bell, Folder } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/utils/supabase/server"
+import { getCurrentUser } from "@/lib/auth"
 import { UserNav } from "@/components/user-nav"
 import { ModeToggle } from "@/components/mode-toggle"
 import { SearchInput } from "@/components/search-input"
@@ -11,20 +11,8 @@ import { MobileNav } from "@/components/mobile-nav"
 import { FontSwitcher } from "@/components/font-switcher"
 
 export async function Navbar() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  let isAdmin = false
-  let profile = null
-  if (user) {
-    const { data: userProfile } = await supabase
-      .from('profiles')
-      .select('nickname, avatar_url, role')
-      .eq('id', user.id)
-      .single()
-    profile = userProfile
-    isAdmin = profile?.role === 'admin'
-  }
+  const { user, profile } = await getCurrentUser()
+  const isAdmin = profile?.role === 'admin'
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

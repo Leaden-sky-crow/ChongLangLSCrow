@@ -51,12 +51,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+
   return (
     <html
       lang="zh-CN"
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://fontsapi.zeoseven.com" crossOrigin="anonymous" />
+        {supabaseUrl ? (
+          <link rel="preconnect" href={supabaseUrl} crossOrigin="anonymous" />
+        ) : null}
+      </head>
       <body className="antialiased">
         <Script id="restore-reading-settings" strategy="beforeInteractive">
           {`try{var d=document.documentElement;d.dataset.font=localStorage.getItem('font')||'chillhuo';d.dataset.fontSize=localStorage.getItem('fontSize')||'md'}catch(e){}`}

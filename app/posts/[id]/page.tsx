@@ -6,6 +6,7 @@ import { Comments } from '@/components/comments'
 import { LikeButton } from '@/components/like-button'
 import { ViewTracker } from '@/components/view-tracker'
 import { createClient } from '@/utils/supabase/server'
+import { getCurrentUser } from '@/lib/auth'
 import { Metadata } from 'next'
 
 type Props = {
@@ -36,11 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PostPage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
-  
-  // Parallel data fetching - avoid waterfalls
-  const [post, userResult, commentsResult] = await Promise.all([
+
+  // 并行拉取文章、评论、当前用户（getCurrentUser 用 cache 去重，与 Navbar 共享，只查一次）
+  const [post, commentsResult, currentUser] = await Promise.all([
     getPost(id),
-    supabase.auth.getUser(),
     supabase
       .from('comments')
       .select(`
@@ -51,27 +51,18 @@ export default async function PostPage({ params }: Props) {
         user:profiles!user_id(nickname, avatar_url)
       `)
       .eq('post_id', id)
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: false }),
+    getCurrentUser(),
   ])
 
   if (!post) {
     notFound()
   }
 
-  const { data: { user } } = userResult
+  const { user, profile } = currentUser
+  const isAdmin = profile?.role === 'admin'
 
-  // 检查用户是否为管理员
-  let isAdmin = false
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-    isAdmin = profile?.role === 'admin'
-  }
-  
-  // Check if user liked the post
+  // 是否已赞（依赖 user.id，单独一次查询，仅登录用户）
   let isLiked = false
   if (user) {
     const { data } = await supabase
