@@ -9,6 +9,7 @@ import { SearchInput } from "@/components/search-input"
 import { NotificationBell } from "@/components/notification-bell"
 import { MobileNav } from "@/components/mobile-nav"
 import { FontSwitcher } from "@/components/font-switcher"
+import { ReadingBackground } from "@/components/reading-background"
 
 export async function Navbar() {
   const { user, profile } = await getCurrentUser()
@@ -74,6 +75,7 @@ export async function Navbar() {
           )}
           <ModeToggle />
           <FontSwitcher />
+          <ReadingBackground />
           {user ? (
             <>
               <NotificationBell />
