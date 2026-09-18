@@ -21,6 +21,8 @@ const FONTS = [
   { id: 'unifont', label: 'Unifont 像素体', family: '"Unifont", monospace' },
   { id: 'huiwen', label: '汇文明朝体', family: '"Huiwen-mincho", serif' },
   { id: 'kinghwa', label: '京华老宋体', family: '"KingHwaOldSong", serif' },
+  { id: 'sys-song', label: '系统宋体', family: '"SimSun", "宋体", serif' },
+  { id: 'sys-hei', label: '系统黑体', family: '"SimHei", "黑体", sans-serif' },
 ]
 
 const SIZES = [

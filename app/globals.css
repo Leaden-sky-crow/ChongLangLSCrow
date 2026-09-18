@@ -160,6 +160,12 @@
 [data-font="kinghwa"] {
   --font-reading: "KingHwaOldSong", "Songti SC", "STSong", "SimSun", ui-serif, Georgia, serif;
 }
+[data-font="sys-song"] {
+  --font-reading: "SimSun", "宋体", "Songti SC", "STSong", ui-serif, Georgia, serif;
+}
+[data-font="sys-hei"] {
+  --font-reading: "SimHei", "黑体", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, sans-serif;
+}
 
 :root { --font-reading-size: 1.0625rem; }
 [data-font-size="sm"] { --font-reading-size: 0.9375rem; }
@@ -200,46 +206,50 @@
   border-radius: var(--radius-lg);
 }
 
-/* ===== 阅读背景 ===== */
-.reading-panel {
-  position: relative;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+/* ===== 阅读背景（全屏固定） ===== */
+[data-reading-bg] body {
+  background-color: transparent;
 }
 
-[data-reading-bg="white"] .reading-panel {
-  background-color: #ffffff;
-  --reading-fg: #1b1b1b;
-}
-[data-reading-bg="black"] .reading-panel {
-  background-color: #0d0d10;
-  --reading-fg: #e6e6e6;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
-}
-[data-reading-bg="kraft"] .reading-panel {
-  background-color: #f4e8cf;
-  --reading-fg: #4a3a26;
-}
-[data-reading-bg="image"] .reading-panel {
-  background-color: #ffffff;
-  --reading-fg: #1b1b1b;
-}
-
-/* 图片背景层（透明度可调） */
-[data-reading-bg="image"] .reading-panel::before {
+body::before {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--reading-bg-base, transparent);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image: var(--reading-bg-image, none);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: var(--reading-bg-opacity, 0.6);
-  pointer-events: none;
-  z-index: 0;
+  opacity: var(--reading-bg-opacity, 1);
 }
-[data-reading-bg="image"] .reading-panel > * {
-  position: relative;
-  z-index: 1;
+
+[data-reading-bg="white"] {
+  --reading-bg-base: #ffffff;
+  --reading-fg: #1b1b1b;
+}
+[data-reading-bg="black"] {
+  --reading-bg-base: #0d0d10;
+  --reading-fg: #e6e6e6;
+}
+[data-reading-bg="kraft"] {
+  --reading-bg-base: #f4e8cf;
+  --reading-fg: #4a3a26;
+}
+[data-reading-bg="image"] {
+  --reading-bg-base: #ffffff;
+  --reading-fg: #1b1b1b;
+}
+
+/* 阅读页正文文字色跟随阅读背景 */
+[data-reading-page] {
+  color: var(--reading-fg, var(--foreground));
 }

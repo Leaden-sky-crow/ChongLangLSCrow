@@ -87,7 +87,7 @@ export default async function PostPage({ params }: Props) {
       {/* View tracker - increments view count after 3 seconds */}
       <ViewTracker postId={post.id} />
       
-      <div className="container max-w-3xl py-8">
+      <div className="container max-w-3xl py-8" data-reading-page>
         <PostContent content={post.content} />
         
         <div className="my-12 flex items-center justify-between border-t border-b py-6">
