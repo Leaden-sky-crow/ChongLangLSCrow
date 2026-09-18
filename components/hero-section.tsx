@@ -58,7 +58,7 @@ export function HeroSection({ title, subtitle, quotes }: HeroSectionProps) {
           title="点击切换"
           className="cursor-pointer select-none rounded-md border border-white/25 bg-black/25 p-4 shadow-xl shadow-black/20 backdrop-blur-md md:p-5"
         >
-          <p className="font-reading text-base font-light leading-relaxed md:text-lg">
+          <p className="whitespace-pre-line font-reading text-base font-light leading-relaxed md:text-lg">
             "{quotes[currentQuote].content}"
           </p>
           <p className="mt-2 text-right font-reading text-xs font-medium md:mt-3 md:text-sm">
