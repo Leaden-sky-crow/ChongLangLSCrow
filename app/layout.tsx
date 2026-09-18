@@ -67,7 +67,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <Script id="restore-reading-settings" strategy="beforeInteractive">
-          {`try{var d=document.documentElement;d.dataset.font=localStorage.getItem('font')||'chillhuo';d.dataset.fontSize=localStorage.getItem('fontSize')||'md';var bg=localStorage.getItem('readingBg')||'white';d.dataset.readingBg=bg;if(bg==='image'){var img=localStorage.getItem('readingBgImage')||'';if(img){d.style.setProperty('--reading-bg-image','url("'+img+'")');}var op=parseInt(localStorage.getItem('readingBgOpacity')||'60',10);d.style.setProperty('--reading-bg-opacity',String(op/100));}}catch(e){}`}
+          {`try{var d=document.documentElement;d.dataset.font=localStorage.getItem('font')||'chillhuo';d.dataset.fontSize=localStorage.getItem('fontSize')||'md';var bg=localStorage.getItem('readingBg')||'white';d.dataset.readingBg=bg;if(bg==='image'){var img=localStorage.getItem('readingBgImage')||'';if(img){d.style.setProperty('--reading-bg-image','url("'+img+'")');}var op=parseInt(localStorage.getItem('readingBgOpacity')||'60',10);d.style.setProperty('--reading-bg-opacity',String(op/100));}var fg=localStorage.getItem('readingFg');if(fg){d.style.setProperty('--reading-fg',fg);}}catch(e){}`}
         </Script>
         <ThemeProvider
           attribute="class"

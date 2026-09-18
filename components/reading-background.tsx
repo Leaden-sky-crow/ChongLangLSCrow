@@ -26,6 +26,7 @@ export function ReadingBackground() {
   const [mode, setMode] = React.useState(DEFAULT_MODE)
   const [image, setImage] = React.useState('')
   const [opacity, setOpacity] = React.useState(DEFAULT_OPACITY)
+  const [fg, setFg] = React.useState('')
   const fileRef = React.useRef<HTMLInputElement>(null)
 
   const apply = React.useCallback((m: string, img: string, op: number) => {
@@ -43,14 +44,28 @@ export function ReadingBackground() {
     localStorage.setItem('readingBgOpacity', String(op))
   }, [])
 
+  const applyFg = React.useCallback((color: string) => {
+    const root = document.documentElement
+    if (color) {
+      root.style.setProperty('--reading-fg', color)
+      localStorage.setItem('readingFg', color)
+    } else {
+      root.style.removeProperty('--reading-fg')
+      localStorage.removeItem('readingFg')
+    }
+  }, [])
+
   React.useEffect(() => {
     const m = localStorage.getItem('readingBg') || DEFAULT_MODE
     const img = localStorage.getItem('readingBgImage') || ''
     const op = Number(localStorage.getItem('readingBgOpacity') || DEFAULT_OPACITY)
+    const f = localStorage.getItem('readingFg') || ''
     setMode(m)
     setImage(img)
     setOpacity(op)
+    setFg(f)
     apply(m, img, op)
+    if (f) document.documentElement.style.setProperty('--reading-fg', f)
     setMounted(true)
   }, [apply])
 
@@ -85,6 +100,11 @@ export function ReadingBackground() {
   const changeOpacity = (op: number) => {
     setOpacity(op)
     apply(mode, image, op)
+  }
+
+  const changeFg = (color: string) => {
+    setFg(color)
+    applyFg(color)
   }
 
   if (!mounted) {
@@ -163,6 +183,28 @@ export function ReadingBackground() {
             </label>
           </div>
         )}
+        {/* 文字颜色 */}
+        <div className="flex items-center gap-2 border-t border-border pt-2.5">
+          <span className="shrink-0 text-xs text-muted-foreground">文字颜色</span>
+          <button
+            type="button"
+            onClick={() => changeFg('')}
+            className={`rounded-md border px-2 py-1 text-xs transition-colors ${
+              fg === ''
+                ? 'border-primary bg-primary/10 font-medium text-foreground'
+                : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            自动
+          </button>
+          <input
+            type="color"
+            value={fg || '#1b1b1b'}
+            onChange={(e) => changeFg(e.target.value)}
+            className="h-7 w-10 cursor-pointer rounded border border-border bg-transparent p-0.5"
+            title="自定义文字颜色"
+          />
+        </div>
       </PopoverContent>
     </Popover>
   )
