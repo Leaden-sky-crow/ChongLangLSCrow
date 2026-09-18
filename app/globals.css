@@ -206,12 +206,14 @@
   border-radius: var(--radius-lg);
 }
 
-/* ===== 阅读背景（全屏固定） ===== */
-[data-reading-bg] body {
+/* ===== 阅读背景（仅文章详情页，全屏固定） ===== */
+/* 跟随系统时白/黑由主题背景承载；只有牛皮纸/图片需要自定义底色才让 body 透明 */
+[data-reading-bg="kraft"] body.reading-page,
+[data-reading-bg="image"] body.reading-page {
   background-color: transparent;
 }
 
-body::before {
+body.reading-page::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -219,7 +221,7 @@ body::before {
   pointer-events: none;
   background-color: var(--reading-bg-base, transparent);
 }
-body::after {
+body.reading-page::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -232,14 +234,6 @@ body::after {
   opacity: var(--reading-bg-opacity, 1);
 }
 
-[data-reading-bg="white"] {
-  --reading-bg-base: #ffffff;
-  --reading-fg: #1b1b1b;
-}
-[data-reading-bg="black"] {
-  --reading-bg-base: #0d0d10;
-  --reading-fg: #e6e6e6;
-}
 [data-reading-bg="kraft"] {
   --reading-bg-base: #f4e8cf;
   --reading-fg: #4a3a26;
@@ -249,7 +243,7 @@ body::after {
   --reading-fg: #1b1b1b;
 }
 
-/* 阅读页正文文字色跟随阅读背景 */
+/* 阅读页文字色跟随阅读背景（含标题、正文、评论） */
 [data-reading-page] {
   color: var(--reading-fg, var(--foreground));
 }

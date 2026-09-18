@@ -18,7 +18,7 @@ export default async function AboutPage() {
   }
 
   return (
-    <div className="container py-20 min-h-screen" data-reading-page>
+    <div className="container py-20 min-h-screen">
       <AboutSection content={aboutContent} />
     </div>
   )

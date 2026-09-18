@@ -12,13 +12,12 @@ import {
 import { Input } from '@/components/ui/input'
 
 const MODES = [
-  { id: 'white', label: '纯白' },
-  { id: 'black', label: '纯黑' },
+  { id: 'auto', label: '跟随系统' },
   { id: 'kraft', label: '牛皮纸' },
   { id: 'image', label: '图片' },
 ]
 
-const DEFAULT_MODE = 'white'
+const DEFAULT_MODE = 'auto'
 const DEFAULT_OPACITY = 60
 
 export function ReadingBackground() {
@@ -129,7 +128,7 @@ export function ReadingBackground() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-72">
         <PopoverTitle>阅读背景</PopoverTitle>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {MODES.map((m) => (
             <button
               key={m.id}

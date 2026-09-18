@@ -8,7 +8,7 @@ export function AboutSection({ content }: { content: string }) {
   
   return (
     <div className="container max-w-3xl py-8" data-color-mode={theme === 'dark' ? 'dark' : 'light'}>
-      <div className="p-6 md:p-8">
+      <div className="rounded-lg border bg-card p-8 shadow-sm">
         <MDEditor.Markdown source={content} style={{ background: 'transparent' }} />
       </div>
     </div>
